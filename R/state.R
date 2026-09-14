@@ -31,7 +31,9 @@ resume_state <- function(progress_path) {
       n_failed = "i",
       last_run_id = "c",
       timestamp = "T"
-    )
+    ),
+    # Materialize columns so Windows releases the file before vroom_write().
+    altrep = FALSE
   )
 }
 
