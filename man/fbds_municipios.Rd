@@ -11,21 +11,28 @@ Um tibble com 5.470 linhas e as colunas:
 \item{municipality}{Nome do municipio, em caixa alta.}
 \item{uf}{Sigla da unidade federativa.}
 \item{uf_code}{Codigo numerico da UF (2 primeiros digitos do geocodigo).}
-\item{area_agua}{Area de massas d'agua.}
-\item{area_silvicultura}{Area de silvicultura.}
-\item{area_formacao_florestal}{Area de formacao florestal.}
-\item{area_formacao_nao_florestal}{Area de formacao nao florestal.}
-\item{area_edificada}{Area edificada.}
-\item{area_antropizada}{Area antropizada.}
+\item{area_agua}{Area de massas d'agua, em hectares.}
+\item{area_silvicultura}{Area de silvicultura, em hectares.}
+\item{area_formacao_florestal}{Area de formacao florestal, em
+hectares, conforme classificacao da FBDS.}
+\item{area_formacao_nao_florestal}{Area de formacao nao florestal,
+em hectares, conforme classificacao da FBDS.}
+\item{area_edificada}{Area edificada, em hectares.}
+\item{area_antropizada}{Area antropizada, em hectares.}
 \item{slug}{Segmento de URL do municipio no portal da Geo FBDS.}
 \item{slug_status}{Um de \code{"unverified"}, \code{"ok"}, \code{"fixed"} ou
 \code{"missing"}, conforme a verificacao contra o portal
-(\code{data-raw/verify_slugs.R}).}
+(\code{data-raw/verify_slugs.R}). Ver Detalhes.}
 }
 }
 \source{
 Fundacao Brasileira para o Desenvolvimento Sustentavel (FBDS),
-\verb{TABELA CONSOLIDADA.xls}, aba "Levantamento do Uso do Solo".
+\verb{TABELA CONSOLIDADA.xls}, aba "Levantamento do Uso do Solo" (colunas
+de area sob o cabecalho "Areas do Uso do Solo (ha)"). Os metadados
+oficiais do mapeamento
+(\url{https://geo.fbds.org.br/Metadados\%20Mapeamento\%20FBDS.pdf}, campo
+"Restricoes Legais": "Irrestrito", 30/04/2023) cobrem o mapeamento
+como um todo, do qual esta tabela consolidada faz parte.
 }
 \usage{
 fbds_municipios
@@ -34,5 +41,22 @@ fbds_municipios
 Catalogo interno e congelado dos 5.470 municipios levantados pela FBDS,
 derivado de \code{data-raw/build_catalog.R}. Usado por \code{\link[=fbds_resolve]{fbds_resolve()}} e
 \code{\link[=fbds_catalog]{fbds_catalog()}} para dispensar leitura de planilha em tempo de execucao.
+As seis colunas \verb{area_*} sao a classificacao de uso do solo do
+levantamento da FBDS (nao a cobertura em si dos shapefiles baixaveis
+pelo pacote) e somam a area total do municipio.
+}
+\details{
+\code{slug_status} comeca \code{"unverified"} para todo o catalogo (o slug e so
+uma estimativa derivada do nome do municipio). Rodar
+\code{data-raw/verify_slugs.R} contra o portal e regerar o catalogo
+atualiza esse campo para os municipios verificados: \code{"ok"} (o slug
+estimado respondeu), \code{"fixed"} (uma variante do slug respondeu) ou
+\code{"missing"} (nenhuma variante respondeu). Na versao atual do pacote,
+apenas os municipios de RO (52) foram verificados; os demais
+permanecem \code{"unverified"} ate uma nova rodada do script.
+}
+\examples{
+fbds_municipios
+dplyr::count(fbds_municipios, slug_status)
 }
 \keyword{datasets}

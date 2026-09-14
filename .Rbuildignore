@@ -10,3 +10,4 @@
 ^\.github$
 ^\.claude$
 ^Makefile$
+^out-.*\.txt$
