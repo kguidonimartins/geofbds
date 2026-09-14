@@ -1,3 +1,27 @@
+#' Manifesto vazio, com os tipos de coluna corretos
+#'
+#' @noRd
+empty_manifest <- function() {
+  tibble::tibble(
+    run_id = character(0),
+    geocode = character(0),
+    uf = character(0),
+    municipality = character(0),
+    layer = character(0),
+    file = character(0),
+    url = character(0),
+    path = character(0),
+    status = character(0),
+    bytes = double(0),
+    expected_bytes = double(0),
+    sha256 = character(0),
+    http_status = integer(0),
+    attempts = integer(0),
+    error = character(0),
+    timestamp = as.POSIXct(character(0))
+  )
+}
+
 #' Montar o manifesto de uma rodada de fetch
 #'
 #' @noRd

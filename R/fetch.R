@@ -41,7 +41,8 @@ fbds_fetch <- function(
 
   run_id <- gsub("[^0-9A-Za-z]", "", format(Sys.time(), "%Y%m%dT%H%M%OS3"))
   n <- nrow(plan)
-  status <- ifelse(plan$action == "skip", "cached", "pending")
+  status <- rep("pending", n)
+  status[plan$action == "skip"] <- "cached"
   http_status <- rep(NA_integer_, n)
   attempts <- rep(0L, n)
   error <- rep(NA_character_, n)

@@ -8,6 +8,7 @@
 ^README\.Rmd$
 ^\.git$
 ^\.github$
+^\.claude$
 ^get-by-geocode\.R$
 ^get-full-geo-fbds-data\.R$
 ^Makefile$

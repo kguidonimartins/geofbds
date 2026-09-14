@@ -37,10 +37,11 @@ fbds_plan <- function(
 ) {
   files <- fbds_files(x, layers = layers, recursive = recursive, cache = TRUE)
 
-  file_component <- ifelse(
-    nzchar(files$path),
-    file.path(files$path, files$file),
-    files$file
+  file_component <- files$file
+  has_subdir <- nzchar(files$path)
+  file_component[has_subdir] <- file.path(
+    files$path[has_subdir],
+    files$file[has_subdir]
   )
 
   dest_path <- vapply(
