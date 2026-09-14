@@ -1,0 +1,58 @@
+url: https://kguidonimartins.github.io/geofbds/
+
+template:
+  bootstrap: 5
+
+reference:
+- title: Catálogo (offline)
+  desc: Resolver identificadores e consultar o catálogo interno de municípios.
+  contents:
+  - fbds_resolve
+  - fbds_catalog
+  - fbds_layers
+  - fbds_ufs
+  - fbds_url
+  - fbds_municipios
+
+- title: Descoberta
+  desc: Listar o que existe no portal antes de baixar.
+  contents:
+  - fbds_files
+  - fbds_coverage
+
+- title: Download
+  desc: Planejar e executar downloads, por município.
+  contents:
+  - fbds_plan
+  - fbds_fetch
+  - fbds_download_municipality
+  - fbds_validate
+
+- title: Download em escala
+  desc: Por estado ou nacional, com retomada.
+  contents:
+  - fbds_download_state
+  - fbds_download_all
+
+- title: Leitura
+  desc: Ler os dados baixados como `sf`.
+  contents:
+  - fbds_read
+  - fbds_get
+
+- title: Cache
+  contents:
+  - fbds_cache_dir
+  - fbds_cache_set
+  - fbds_cache_status
+  - fbds_cache_clean
+
+- title: Pacote
+  contents:
+  - geofbds-package
+
+articles:
+- title: Vinhetas
+  contents:
+  - geofbds
+  - estados

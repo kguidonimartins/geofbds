@@ -1,0 +1,35 @@
+citHeader(
+  "Ao usar o geofbds, cite o pacote e os dados da FBDS separadamente:"
+)
+
+bibentry(
+  bibtype = "Manual",
+  title = "geofbds: Download and Read Municipal Data from Geo FBDS",
+  author = person("Karlo", "Guidoni", email = "kguidonimartins@gmail.com"),
+  year = "2026",
+  note = "R package",
+  url = "https://github.com/kguidonimartins/geofbds"
+)
+
+bibentry(
+  bibtype = "Misc",
+  title = "Mapeamento em Alta Resolução dos Biomas Brasileiros",
+  author = person(
+    family = "Fundação Brasileira para o Desenvolvimento Sustentável (FBDS)"
+  ),
+  year = "2023",
+  url = "https://geo.fbds.org.br",
+  note = paste(
+    "Metadados:",
+    "https://geo.fbds.org.br/Metadados%20Mapeamento%20FBDS.pdf",
+    "(30/04/2023) -- campo \"Restricoes Legais\": Irrestrito"
+  )
+)
+
+citFooter(
+  "Os dados sao da FBDS; o geofbds apenas automatiza o acesso a eles.",
+  "O campo \"Restricoes Legais\" dos metadados oficiais da FBDS (ver URL",
+  "acima) diz \"Irrestrito\", mas confira voce mesmo os metadados antes de",
+  "redistribuir ou usar os dados comercialmente -- este pacote nao e uma",
+  "fonte de aconselhamento juridico."
+)

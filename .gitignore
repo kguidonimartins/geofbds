@@ -1,0 +1,11 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.Rbuildignore~
+*.Rcheck/
+*.tar.gz
+inst/doc
+README.html
+docs/
+out-*.txt
