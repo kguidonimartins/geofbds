@@ -45,7 +45,8 @@ fbds_read(x, layer, type = NULL, crs = NULL)
 ## Value
 
 Um objeto `sf`, com uma linha por feicao e os municipios empilhados;
-inclui as colunas `geocode` e `uf`.
+inclui as colunas `geocode` e `uf`. Atributos de identificacao
+equivalentes vindos do shapefile sao removidos para evitar duplicatas.
 
 ## Details
 
