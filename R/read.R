@@ -133,6 +133,14 @@ resolve_read_inputs <- function(x, layer) {
   geocode <- fbds_resolve(x)
   resolve_from_disk(fbds_cache_dir(), layer, geocode_filter = geocode)
 }
+#' Remover atributos de identificacao que fbds_read() recria
+#'
+#' @noRd
+drop_read_metadata <- function(sf_obj) {
+  aliases <- c("geocode", "geocodigo", "uf")
+  keep <- !(tolower(names(sf_obj)) %in% aliases)
+  sf_obj[, keep, drop = FALSE]
+}
 
 #' Ler dados espaciais de uma camada
 #'
@@ -161,7 +169,8 @@ resolve_read_inputs <- function(x, layer) {
 #'   o empilhamento falha com o erro do proprio sf.
 #'
 #' @return Um objeto `sf`, com uma linha por feicao e os municipios
-#'   empilhados; inclui as colunas `geocode` e `uf`.
+#'   empilhados; inclui as colunas `geocode` e `uf`. Atributos de identificacao
+#'   equivalentes vindos do shapefile sao removidos para evitar duplicatas.
 #' @export
 #'
 #' @examples
@@ -238,9 +247,10 @@ fbds_read <- function(x, layer, type = NULL, crs = NULL) {
   shapes <- lapply(seq_len(nrow(index)), function(i) {
     sf_obj <- sf::st_read(
       index$shp_path[[i]],
-      options = "ENCODING=LATIN1",
+      options = "ENCODING=UTF-8",
       quiet = TRUE
     )
+    sf_obj <- drop_read_metadata(sf_obj)
     sf_obj$geocode <- index$geocode[[i]]
     sf_obj$uf <- index$uf[[i]]
     if (!is.null(crs)) {

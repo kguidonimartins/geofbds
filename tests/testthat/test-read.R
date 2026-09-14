@@ -295,3 +295,33 @@ test_that("fbds_get downloads then reads in one step", {
   expect_equal(nrow(out), 3L)
   expect_equal(unique(out$geocode), "1100031")
 })
+
+test_that("fbds_read decodes UTF-8 attributes and drops duplicate metadata", {
+  root <- withr::local_tempdir()
+  dir <- file.path(root, "ES", "3205309", "hidrografia")
+  dir.create(dir, recursive = TRUE)
+  source <- sf::st_sf(
+    GEOCODIGO = 3205309,
+    MUNICIPIO = "VITÓRIA",
+    UF = "ES",
+    CD_UF = 32L,
+    HIDRO = "nascente",
+    geometry = sf::st_sfc(sf::st_point(c(-40, -20)), crs = 4326)
+  )
+  path <- file.path(dir, "ES_3205309_NASCENTES.shp")
+  suppressWarnings(sf::st_write(
+    source,
+    path,
+    quiet = TRUE,
+    layer_options = "ENCODING=UTF-8"
+  ))
+
+  out <- fbds_read(root, layer = "hidrografia", type = "NASCENTES")
+
+  expect_equal(unique(out$MUNICIPIO), "VITÓRIA")
+  expect_setequal(
+    names(out),
+    c("MUNICIPIO", "CD_UF", "HIDRO", "geocode", "uf", "geometry")
+  )
+  expect_identical(anyDuplicated(tolower(names(out))), 0L)
+})

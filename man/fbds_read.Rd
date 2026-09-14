@@ -23,7 +23,8 @@ o empilhamento falha com o erro do proprio sf.}
 }
 \value{
 Um objeto \code{sf}, com uma linha por feicao e os municipios
-empilhados; inclui as colunas \code{geocode} e \code{uf}.
+empilhados; inclui as colunas \code{geocode} e \code{uf}. Atributos de identificacao
+equivalentes vindos do shapefile sao removidos para evitar duplicatas.
 }
 \description{
 Aceita um manifesto (de \code{\link[=fbds_fetch]{fbds_fetch()}} e afins), geocodigos/nomes
