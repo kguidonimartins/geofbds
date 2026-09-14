@@ -4,9 +4,10 @@ Guia para agentes de IA trabalhando neste repositório. `geofbds` é um
 pacote R que descobre, baixa e lê dados geoespaciais municipais da
 [Geo FBDS](https://geo.fbds.org.br) — uso do solo, hidrografia e APP.
 
-Contexto de projeto: `PLAN.md` (roteiro de implementação, fases 0-8,
-todas concluídas) e `SPECS.md` (proposta original, avaliação do código
-legado). Ambos ficam no repositório mas fora do build (`.Rbuildignore`).
+Contexto de projeto: `dev/PLAN.md` (roteiro de implementação, fases 0-8,
+todas concluídas) e `dev/SPECS.md` (proposta original, avaliação do
+código legado). Ambos ficam no repositório mas fora do build
+(`.Rbuildignore`).
 
 ## Comandos essenciais
 
@@ -91,7 +92,7 @@ antes de qualquer uso que dependa disso.
 ## Coisas para não inventar
 
 - Unidades, categorias ou definições dos dados da FBDS que não estejam
-  confirmadas em `SPECS.md`, nos metadados oficiais, ou verificadas
+  confirmadas em `dev/SPECS.md`, nos metadados oficiais, ou verificadas
   diretamente (ex.: as colunas `area_*` de `fbds_municipios` são em
   hectares — confirmado na própria planilha-fonte, linha acima do
   cabeçalho lido).

@@ -1,8 +1,7 @@
 ^LICENSE\.md$
 ^data-raw$
 ^geo-fbds\.Rproj$
-^SPECS\.md$
-^PLAN\.md$
+^dev$
 ^AGENTS\.md$
 ^docs$
 ^_pkgdown\.yml$
