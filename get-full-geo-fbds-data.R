@@ -12,7 +12,7 @@ if (!require("tictoc")) install.packages("tictoc")
 url <- "https://geo.fbds.org.br"
 
 municipios <-
-  here("TABELA CONSOLIDADA.xls") %>%
+  here("data/raw/TABELA CONSOLIDADA.xls") %>%
   read_excel(sheet = "Levantamento do Uso do Solo", skip = 2) %>%
   select(
     geocodigo = `...1`,
