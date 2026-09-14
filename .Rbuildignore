@@ -10,3 +10,4 @@
 ^\.github$
 ^get-by-geocode\.R$
 ^get-full-geo-fbds-data\.R$
+^Makefile$
