@@ -77,9 +77,15 @@ de acesso real à internet; se um precisar, pare e reconsidere.
 
 5.470 municípios, gerado por `data-raw/build_catalog.R`. `slug_status`
 começa `"unverified"` para todos; `data-raw/verify_slugs.R` confere
-contra o portal real e atualiza para `"ok"`/`"fixed"`/`"missing"`. Hoje
-só RO (52 municípios) está verificado. Depois de rodar
-`verify_slugs.R`, rode `make catalog` para incorporar o resultado.
+contra o portal real e atualiza para `"ok"`/`"fixed"`/`"missing"`. Os
+5.470 já estão verificados (nenhum `"missing"`). 11 municípios do
+Piauí tinham nome corrompido na planilha de origem (acentos virando
+letras soltas ou somem, ex. `BOQUEIRlO` em vez de `BOQUEIRÃO`) — o
+defeito está no `.xls`, não na leitura; `build_catalog.R` corrige os
+11 nomes com uma tabela hardcoded (conferida contra a API do IBGE),
+documentada inline. Depois de rodar `verify_slugs.R` de novo (ex. se a
+planilha-fonte mudar), rode `make catalog` para incorporar o
+resultado.
 
 ## Dados da FBDS
 

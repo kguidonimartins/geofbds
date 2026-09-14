@@ -27,6 +27,33 @@ if (anyNA(geocode_num) || anyNA(geocode) || any(nchar(geocode) != 7L)) {
   )
 }
 
+# 11 municipios do Piauí tem o nome corrompido na planilha de origem: letras
+# acentuadas (Ã, Í, Ó, É) viraram minusculas soltas ou sumiram (ex.
+# "BOQUEIRlO DO PIAUÍ" em vez de "BOQUEIRÃO DO PIAUÍ"). Confirmado nos bytes
+# brutos da celula -- nao e um problema de leitura do readxl, o defeito esta
+# no .xls. slug derivado do nome corrompido nao batia com o portal
+# (data-raw/verify_slugs.R marcava esses 11 como "missing"). Nomes corretos
+# conferidos contra a API do IBGE
+# (https://servicodados.ibge.gov.br/api/v1/localidades/municipios/{geocode})
+# e o slug derivado deles confirmado contra o portal (ver
+# data-raw/slug_check.csv).
+corrupted_names <- c(
+  "2201945" = "BOQUEIRÃO DO PIAUÍ",
+  "2202539" = "CARAÚBAS DO PIAUÍ",
+  "2202653" = "CAXINGÓ",
+  "2203420" = "DOMINGOS MOURÃO",
+  "2205573" = "LAGOA DE SÃO FRANCISCO",
+  "2206100" = "MATIAS OLÍMPIO",
+  "2206357" = "MILTON BRANDÃO",
+  "2206753" = "NOSSA SENHORA DE NAZARÉ",
+  "2209872" = "SÃO JOÃO DA FRONTEIRA",
+  "2209971" = "SÃO JOÃO DO ARRAIAL",
+  "2210052" = "SÃO JOSÉ DO DIVINO"
+)
+municipality <- raw[["...2"]]
+fix_idx <- match(names(corrupted_names), geocode)
+municipality[fix_idx] <- corrupted_names
+
 area_cols_raw <- c(
   "Água",
   "Silvicultura",
@@ -45,7 +72,7 @@ names(area_data) <- area_cols_clean
 
 fbds_municipios <- tibble::tibble(
   geocode = geocode,
-  municipality = raw[["...2"]],
+  municipality = municipality,
   uf = raw[["...3"]],
   uf_code = substr(geocode, 1, 2)
 ) |>
