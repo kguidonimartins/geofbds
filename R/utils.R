@@ -28,6 +28,20 @@ shapefile_basename <- function(file) {
   tools::file_path_sans_ext(file)
 }
 
+#' Formatar bytes de forma legivel (ex. "1.2 GB")
+#'
+#' @noRd
+format_bytes <- function(bytes) {
+  if (is.na(bytes) || bytes <= 0) {
+    return("0 B")
+  }
+
+  units <- c("B", "KB", "MB", "GB", "TB")
+  exponent <- min(floor(log(bytes, 1024)), length(units) - 1L)
+  value <- bytes / 1024^exponent
+  sprintf("%.1f %s", value, units[exponent + 1L])
+}
+
 #' Interpolate `{name}` placeholders in a path pattern
 #'
 #' A minimal stand-in for `glue::glue()` restricted to named substitution

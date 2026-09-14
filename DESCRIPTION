@@ -25,6 +25,7 @@ Imports:
     tidyr,
     tools,
     utils,
+    vroom,
     xml2
 Suggests:
     janitor,
@@ -33,7 +34,6 @@ Suggests:
     rmarkdown,
     sf,
     testthat (>= 3.0.0),
-    vroom,
     webfakes,
     withr
 Config/testthat/edition: 3
