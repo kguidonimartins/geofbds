@@ -60,7 +60,9 @@ fbds_download_municipality <- function(
 #' @param block_size Numero de municipios por bloco.
 #' @param ask Se `TRUE` (padrao em sessao interativa) e o volume
 #'   estimado ultrapassar `confirm_bytes`, pede confirmacao antes de
-#'   baixar. Fora de sessao interativa, nada e perguntado.
+#'   baixar. Fora de sessao interativa, nada e perguntado (nem mesmo
+#'   confirmado automaticamente — `utils::askYesNo()` sem terminal
+#'   devolve o padrao, que aqui e `FALSE`).
 #' @param confirm_bytes Limite (bytes) acima do qual `ask = TRUE` pede
 #'   confirmacao. Padrao `getOption("geofbds.confirm_bytes")`.
 #' @inheritParams fbds_plan
@@ -87,6 +89,7 @@ fbds_download_state <- function(
   retries = getOption("geofbds.retries", 3L),
   timeout = getOption("geofbds.timeout", 300),
   progress = getOption("geofbds.progress", TRUE),
+  dry_run = FALSE,
   ask = interactive(),
   confirm_bytes = getOption("geofbds.confirm_bytes", 1e9)
 ) {
@@ -119,7 +122,7 @@ fbds_download_state <- function(
   coverage <- fbds_coverage(uf = uf, layers = layers)
   total_bytes <- sum(coverage$bytes, na.rm = TRUE)
 
-  if (isTRUE(ask) && total_bytes > confirm_bytes) {
+  if (!isTRUE(dry_run) && isTRUE(ask) && total_bytes > confirm_bytes) {
     cli::cli_inform(
       "Download estimado: {nrow(remaining)} municipio(s), {format_bytes(total_bytes)}."
     )
@@ -162,11 +165,12 @@ fbds_download_state <- function(
       workers = workers,
       retries = retries,
       timeout = timeout,
-      progress = progress
+      progress = progress,
+      dry_run = dry_run
     )
     manifests[[i]] <- manifest
 
-    if (nrow(manifest) > 0L) {
+    if (!isTRUE(dry_run) && nrow(manifest) > 0L) {
       update_progress_state(progress_path, manifest, catalog)
     }
   }
@@ -199,6 +203,7 @@ fbds_download_all <- function(
   retries = getOption("geofbds.retries", 3L),
   timeout = getOption("geofbds.timeout", 300),
   progress = getOption("geofbds.progress", TRUE),
+  dry_run = FALSE,
   ask = interactive(),
   confirm_bytes = getOption("geofbds.confirm_bytes", 1e9)
 ) {
@@ -214,6 +219,7 @@ fbds_download_all <- function(
     retries = retries,
     timeout = timeout,
     progress = progress,
+    dry_run = dry_run,
     ask = ask,
     confirm_bytes = confirm_bytes
   )

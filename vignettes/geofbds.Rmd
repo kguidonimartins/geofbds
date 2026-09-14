@@ -1,0 +1,123 @@
+---
+title: "Uso básico"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Uso básico}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(geofbds)
+```
+
+O geofbds baixa e lê dados geoespaciais da [Geo FBDS](https://geo.fbds.org.br)
+— uso e cobertura do solo, hidrografia e Áreas de Preservação Permanente
+(APP) — por município brasileiro. Esta vinheta cobre o fluxo básico: resolver
+um identificador, ver o que existe, baixar e ler. Para baixar uma UF inteira,
+veja `vignette("estados", package = "geofbds")`.
+
+Os trechos abaixo fazem requisições reais ao portal e não rodam durante o
+`R CMD check`; rode-os você mesmo em uma sessão interativa.
+
+## Resolvendo identificadores
+
+Praticamente toda função do pacote aceita geocódigo do IBGE, nome de
+município ou sigla de UF — [fbds_resolve()] é o que faz essa tradução por
+baixo dos panos, e pode ser chamada diretamente para conferir o resultado:
+
+```{r, eval = FALSE}
+fbds_resolve("1100031")
+fbds_resolve("Cabixi")
+fbds_resolve("Cabixi/RO")
+```
+
+Um nome que existe em mais de uma UF nunca é resolvido em silêncio:
+
+```{r, eval = FALSE}
+fbds_resolve("Bom Jesus")
+#> Error:
+#> ! Nome de municipio ambiguo: "Bom Jesus"
+#> ℹ Encontrado em mais de uma UF: "PI", "RN", "PB", "SC", "RS".
+#> ℹ Use o formato "Municipio/UF" ou informe o argumento `uf`.
+
+fbds_resolve("Bom Jesus", uf = "RS")
+```
+
+## Consultando o catálogo, sem rede
+
+`fbds_catalog()` filtra o catálogo interno (5.470 municípios) offline —
+útil para descobrir geocódigos, sem tocar a rede:
+
+```{r, eval = FALSE}
+fbds_catalog(uf = "RO")
+fbds_catalog(name = "cabixi")
+```
+
+## Vendo o que existe antes de baixar
+
+```{r, eval = FALSE}
+fbds_files("1100031")
+fbds_coverage("RO")
+```
+
+## Baixando um ou mais municípios
+
+```{r, eval = FALSE}
+m <- fbds_download_municipality(c("1100031", "1100049"), layers = "app")
+dplyr::count(m, status)
+```
+
+O retorno é o manifesto — uma linha por arquivo, com `status`
+(`downloaded`/`cached`/`failed`/`skipped`), tamanho, sha256 e mais. Ele
+também fica gravado em `{dest_dir}/_manifests/{run_id}.csv`.
+
+Nome também funciona no lugar de geocódigo:
+
+```{r, eval = FALSE}
+fbds_download_municipality("Cabixi/RO", layers = "app")
+```
+
+`dry_run = TRUE` mostra o que seria baixado sem tocar a rede:
+
+```{r, eval = FALSE}
+fbds_download_municipality("1100031", layers = "app", dry_run = TRUE)
+```
+
+## Conferindo a integridade
+
+`HIDROGRAFIA`, por exemplo, tem mais de um conjunto de shapefile por
+município (`MASSAS_DAGUA`, `NASCENTES`, `RIOS_DUPLOS`, `RIOS_SIMPLES`).
+`fbds_validate()` avisa quando algum conjunto está incompleto:
+
+```{r, eval = FALSE}
+fbds_validate(m)
+```
+
+## Lendo como `sf`
+
+```{r, eval = FALSE}
+app_cabixi <- fbds_read(m, layer = "app", type = "APP")
+plot(sf::st_geometry(app_cabixi))
+```
+
+Ou em um passo só, no padrão do [geobr](https://ipeagit.github.io/geobr/):
+
+```{r, eval = FALSE}
+app_cabixi <- fbds_get("1100031", layer = "app", type = "APP")
+```
+
+## Pela linha de comando
+
+O mesmo download por município também funciona sem abrir uma sessão R:
+
+```bash
+Rscript inst/scripts/geofbds municipality 1100031 1100049 --layers=app,uso
+```

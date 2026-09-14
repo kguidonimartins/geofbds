@@ -201,6 +201,25 @@ test_that("fbds_download_state aborts when the confirmation is declined", {
   expect_false(file.exists(file.path(dest_dir, "_progress.csv")))
 })
 
+test_that("fbds_download_state(dry_run = TRUE) writes no files and no progress", {
+  local_uf_server(fbds_catalog(uf = "RR"))
+  dest_dir <- withr::local_tempdir()
+
+  m <- fbds_download_state(
+    "RR",
+    layers = "app",
+    dest_dir = dest_dir,
+    block_size = 15L,
+    dry_run = TRUE,
+    progress = FALSE
+  )
+
+  expect_equal(nrow(m), 15L)
+  expect_true(all(m$status == "skipped"))
+  expect_false(file.exists(file.path(dest_dir, "_progress.csv")))
+  expect_false(dir.exists(file.path(dest_dir, "_manifests")))
+})
+
 test_that("fbds_download_state proceeds when the confirmation is accepted", {
   testthat::local_mocked_bindings(
     askYesNo = function(...) TRUE,

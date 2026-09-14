@@ -1,0 +1,128 @@
+#!/usr/bin/env Rscript
+
+# Linha de comando do geofbds. Preserva a ergonomia do antigo
+# `Rscript get-by-geocode.R 1100031 1100049` e acrescenta o modo
+# estadual. Parsing em base R (commandArgs()), sem dependencia nova.
+
+usage <- "
+Uso:
+  geofbds municipality <geocodigo|nome|UF...> [opcoes]
+  geofbds state <UF...> [opcoes]
+  geofbds files <geocodigo|nome|UF> [--layers=camada1,camada2]
+
+Opcoes:
+  --layers=app,hidrografia,uso   Camadas (padrao: todas)
+  --dest=caminho                 Diretorio de destino (padrao: cache do pacote)
+  --workers=N                    Arquivos por bloco de download (padrao: 4)
+  --dry-run                      Nao baixa nada; mostra o que seria feito
+  --yes                          'state': pula a confirmacao de volume
+  --help, -h                     Mostra esta mensagem
+
+Exemplos:
+  geofbds municipality 1100031 1100049 --layers=app,uso --dest=dados/geo-fbds
+  geofbds municipality Cabixi/RO --layers=app
+  geofbds state RO --workers=6
+  geofbds state RO --yes            # sem prompt de confirmacao (nao interativo)
+  geofbds files RO --layers=app
+"
+
+parse_cli_args <- function(args) {
+  flags <- list(
+    layers = NULL,
+    dest = NULL,
+    workers = NULL,
+    dry_run = FALSE,
+    yes = FALSE,
+    help = FALSE
+  )
+  positional <- character(0)
+
+  for (a in args) {
+    if (a %in% c("--help", "-h")) {
+      flags$help <- TRUE
+    } else if (startsWith(a, "--layers=")) {
+      flags$layers <- strsplit(sub("^--layers=", "", a), ",", fixed = TRUE)[[1]]
+    } else if (startsWith(a, "--dest=")) {
+      flags$dest <- sub("^--dest=", "", a)
+    } else if (startsWith(a, "--workers=")) {
+      flags$workers <- suppressWarnings(as.integer(sub("^--workers=", "", a)))
+      if (is.na(flags$workers)) {
+        stop("--workers precisa de um numero inteiro.", call. = FALSE)
+      }
+    } else if (identical(a, "--dry-run")) {
+      flags$dry_run <- TRUE
+    } else if (identical(a, "--yes")) {
+      flags$yes <- TRUE
+    } else if (startsWith(a, "--")) {
+      stop("Opcao desconhecida: ", a, call. = FALSE)
+    } else {
+      positional <- c(positional, a)
+    }
+  }
+
+  list(flags = flags, positional = positional)
+}
+
+main <- function(args) {
+  if (length(args) == 0L || args[[1]] %in% c("--help", "-h")) {
+    cat(usage)
+    return(invisible(NULL))
+  }
+
+  subcommand <- args[[1]]
+  if (!(subcommand %in% c("municipality", "state", "files"))) {
+    stop(
+      "Subcomando desconhecido: '",
+      subcommand,
+      "'. Use municipality, state ou files.",
+      call. = FALSE
+    )
+  }
+
+  parsed <- parse_cli_args(args[-1])
+  if (isTRUE(parsed$flags$help)) {
+    cat(usage)
+    return(invisible(NULL))
+  }
+  if (length(parsed$positional) == 0L) {
+    stop(
+      "Informe ao menos um geocodigo, nome de municipio ou UF.",
+      call. = FALSE
+    )
+  }
+
+  dest_dir <- parsed$flags$dest %||% geofbds::fbds_cache_dir()
+  workers <- parsed$flags$workers %||% getOption("geofbds.workers", 4L)
+
+  result <- switch(
+    subcommand,
+    municipality = geofbds::fbds_download_municipality(
+      parsed$positional,
+      layers = parsed$flags$layers,
+      dest_dir = dest_dir,
+      workers = workers,
+      dry_run = parsed$flags$dry_run
+    ),
+    state = geofbds::fbds_download_state(
+      parsed$positional,
+      layers = parsed$flags$layers,
+      dest_dir = dest_dir,
+      workers = workers,
+      dry_run = parsed$flags$dry_run,
+      ask = !parsed$flags$yes
+    ),
+    files = geofbds::fbds_files(
+      parsed$positional,
+      layers = parsed$flags$layers
+    )
+  )
+
+  print(result)
+  invisible(result)
+}
+
+`%||%` <- function(x, y) if (is.null(x)) y else x
+
+if (sys.nframe() == 0L) {
+  main(commandArgs(trailingOnly = TRUE))
+}

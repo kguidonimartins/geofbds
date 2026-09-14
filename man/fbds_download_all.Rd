@@ -15,6 +15,7 @@ fbds_download_all(
   retries = getOption("geofbds.retries", 3L),
   timeout = getOption("geofbds.timeout", 300),
   progress = getOption("geofbds.progress", TRUE),
+  dry_run = FALSE,
   ask = interactive(),
   confirm_bytes = getOption("geofbds.confirm_bytes", 1000000000)
 )
@@ -47,9 +48,14 @@ subdiretorio como prefixo.}
 
 \item{progress}{Se \code{TRUE} (padrao), informa o andamento via \code{cli}.}
 
+\item{dry_run}{Se \code{TRUE}, nao baixa nada: devolve o manifesto que
+resultaria (\code{status} \code{"cached"} ou \code{"skipped"}) sem tocar a rede.}
+
 \item{ask}{Se \code{TRUE} (padrao em sessao interativa) e o volume
 estimado ultrapassar \code{confirm_bytes}, pede confirmacao antes de
-baixar. Fora de sessao interativa, nada e perguntado.}
+baixar. Fora de sessao interativa, nada e perguntado (nem mesmo
+confirmado automaticamente — \code{utils::askYesNo()} sem terminal
+devolve o padrao, que aqui e \code{FALSE}).}
 
 \item{confirm_bytes}{Limite (bytes) acima do qual \code{ask = TRUE} pede
 confirmacao. Padrao \code{getOption("geofbds.confirm_bytes")}.}
