@@ -55,4 +55,37 @@ fbds_municipios <- tibble::tibble(
     slug_status = "unverified"
   )
 
+# Fase 2 (data-raw/verify_slugs.R): incorpora o slug confirmado contra o
+# portal, quando disponivel. Municipios ainda nao verificados mantem o
+# slug derivado do nome e slug_status = "unverified".
+slug_check_path <- "data-raw/slug_check.csv"
+if (file.exists(slug_check_path)) {
+  slug_check <- vroom::vroom(
+    slug_check_path,
+    col_types = vroom::cols(
+      geocode = "c",
+      slug_tentado = "c",
+      http_status = "d",
+      slug_final = "c"
+    )
+  )
+
+  fbds_municipios <- fbds_municipios |>
+    dplyr::left_join(
+      dplyr::select(slug_check, "geocode", "slug_final"),
+      by = "geocode"
+    ) |>
+    dplyr::mutate(
+      slug_status = dplyr::case_when(
+        is.na(.data$slug_final) & .data$geocode %in% slug_check$geocode ~
+          "missing",
+        .data$slug_final == .data$slug ~ "ok",
+        !is.na(.data$slug_final) ~ "fixed",
+        .default = .data$slug_status
+      ),
+      slug = dplyr::coalesce(.data$slug_final, .data$slug)
+    ) |>
+    dplyr::select(-"slug_final")
+}
+
 usethis::use_data(fbds_municipios, overwrite = TRUE)

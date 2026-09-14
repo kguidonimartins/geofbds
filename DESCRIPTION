@@ -17,25 +17,25 @@ Depends:
     R (>= 4.1)
 Imports:
     cli,
+    curl (>= 5.0.0),
     dplyr,
     rlang,
+    rvest,
     tibble,
     tidyr,
-    utils
+    tools,
+    utils,
+    xml2
 Suggests:
-    curl (>= 5.0.0),
     janitor,
     knitr,
     readxl,
     rmarkdown,
-    rvest,
     sf,
     testthat (>= 3.0.0),
-    tools,
     vroom,
     webfakes,
-    withr,
-    xml2
+    withr
 Config/testthat/edition: 3
 Config/roxygen2/version: 8.0.0
 LazyData: true

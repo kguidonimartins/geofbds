@@ -17,6 +17,17 @@ normalize_text <- function(x) {
   gsub("\\s+", " ", x)
 }
 
+#' Basename used to group shapefile components into a set
+#'
+#' Strips one extension, so "x.shp", "x.shx" and "x.dbf" all group under
+#' "x". Reused by `fbds_coverage()` (Fase 3, approximate) and
+#' `shapefile_sets()` (Fase 4, authoritative on a downloaded manifest).
+#'
+#' @noRd
+shapefile_basename <- function(file) {
+  tools::file_path_sans_ext(file)
+}
+
 #' Interpolate `{name}` placeholders in a path pattern
 #'
 #' A minimal stand-in for `glue::glue()` restricted to named substitution
