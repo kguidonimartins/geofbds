@@ -3,6 +3,7 @@
 ^geo-fbds\.Rproj$
 ^SPECS\.md$
 ^PLAN\.md$
+^AGENTS\.md$
 ^docs$
 ^_pkgdown\.yml$
 ^README\.Rmd$
