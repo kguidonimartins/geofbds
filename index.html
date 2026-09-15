@@ -34,6 +34,7 @@
 <li class="nav-item"><a class="nav-link" href="articles/geofbds.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link" href="articles/index.html">Articles</a></li>
+<li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -145,10 +146,27 @@
 <span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="ex">Rscript</span> inst/scripts/geofbds files RO <span class="at">--layers</span><span class="op">=</span>app</span></code></pre></div>
 </div>
 <div class="section level2">
+<h2 id="aplicativo-shiny">Aplicativo Shiny<a class="anchor" aria-label="anchor" href="#aplicativo-shiny"></a>
+</h2>
+<p>O aplicativo permite selecionar um município, uma camada e um tipo de dado, planejar o volume, baixar o conjunto validado e visualizar as geometrias em um mapa.</p>
+<p>Na interface, siga esta sequência:</p>
+<ol style="list-style-type: decimal">
+<li>Escolha o município e a camada.</li>
+<li>Clique em <strong>Descobrir tipos</strong>.</li>
+<li>Escolha o tipo do conjunto.</li>
+<li>Clique em <strong>Planejar consulta</strong> e confira o volume previsto.</li>
+<li>Clique em <strong>Baixar e visualizar</strong>.</li>
+<li>Escolha um atributo temático ou explore o mapa; o ZIP validado fica disponível após o carregamento.</li>
+</ol>
+<p>Com o pacote e as dependências instalados, execute:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">make</span> run-app</span></code></pre></div>
+<p>O aplicativo usa um diretório temporário por sessão. Os limites padrão são 250 MB por consulta e 250.000 feições; eles podem ser ajustados com <code>GEOFBDS_SHINY_MAX_BYTES</code> e <code>GEOFBDS_SHINY_MAX_FEATURES</code>.</p>
+</div>
+<div class="section level2">
 <h2 id="cache">Cache<a class="anchor" aria-label="anchor" href="#cache"></a>
 </h2>
 <p>Por padrão, tudo fica em [tools::R_user_dir()]<code>("geofbds", "cache")</code>, com confirmação no primeiro uso em sessão interativa. Para outro diretório:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/fbds_cache_set.html">fbds_cache_set</a></span><span class="op">(</span><span class="st">"dados/geo-fbds"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/fbds_cache_status.html">fbds_cache_status</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>

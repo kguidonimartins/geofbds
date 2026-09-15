@@ -23,6 +23,14 @@ Sempre rode `make tests` e `make check` antes de considerar uma mudança
 pronta — o pacote está em 0 errors/0 warnings/0 notes; qualquer
 regressão deve ser corrigida, não silenciada.
 
+## Documentação e histórico
+
+- O arquivo-fonte do README é `README.Rmd`. Edite sempre o `.Rmd`;
+  regenere `README.md` com `make render`.
+- `NEWS.md` registra as mudanças voltadas ao usuário em cada versão. Ao
+  implementar uma funcionalidade, correção ou alteração relevante do
+  pacote, atualize o `NEWS.md` correspondente.
+
 ## Arquitetura: quatro camadas, dependência só para baixo
 
     4. Leitura (sf) ──────── fbds_read()  fbds_get()

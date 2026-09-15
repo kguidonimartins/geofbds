@@ -109,6 +109,32 @@ Rscript inst/scripts/geofbds state RO --workers=6 --yes
 Rscript inst/scripts/geofbds files RO --layers=app
 ```
 
+## Aplicativo Shiny
+
+O aplicativo permite selecionar um município, uma camada e um tipo de
+dado, planejar o volume, baixar o conjunto validado e visualizar as
+geometrias em um mapa.
+
+Na interface, siga esta sequência:
+
+1.  Escolha o município e a camada.
+2.  Clique em **Descobrir tipos**.
+3.  Escolha o tipo do conjunto.
+4.  Clique em **Planejar consulta** e confira o volume previsto.
+5.  Clique em **Baixar e visualizar**.
+6.  Escolha um atributo temático ou explore o mapa; o ZIP validado fica
+    disponível após o carregamento.
+
+Com o pacote e as dependências instalados, execute:
+
+``` bash
+make run-app
+```
+
+O aplicativo usa um diretório temporário por sessão. Os limites padrão
+são 250 MB por consulta e 250.000 feições; eles podem ser ajustados com
+`GEOFBDS_SHINY_MAX_BYTES` e `GEOFBDS_SHINY_MAX_FEATURES`.
+
 ## Cache
 
 Por padrão, tudo fica em \[tools::R_user_dir()\]`("geofbds", "cache")`,

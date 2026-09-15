@@ -18,6 +18,7 @@
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="articles/geofbds.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link" href="articles/index.html">Articles</a></li>
+<li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/kguidonimartins/geofbds/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -46,6 +47,12 @@
 <span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="ex">air</span> format .        <span class="co"># formata R/*.R (rode antes de commitar)</span></span></code></pre></div>
 <p>Sempre rode <code>make tests</code> e <code>make check</code> antes de considerar uma mudança pronta — o pacote está em 0 errors/0 warnings/0 notes; qualquer regressão deve ser corrigida, não silenciada.</p>
 </div>
+<div class="section level2">
+<h2 id="documentação-e-histórico">Documentação e histórico<a class="anchor" aria-label="anchor" href="#documenta%C3%A7%C3%A3o-e-hist%C3%B3rico"></a></h2>
+<ul><li>O arquivo-fonte do README é <code>README.Rmd</code>. Edite sempre o <code>.Rmd</code>; regenere <code>README.md</code> com <code>make render</code>.</li>
+<li>
+<code>NEWS.md</code> registra as mudanças voltadas ao usuário em cada versão. Ao implementar uma funcionalidade, correção ou alteração relevante do pacote, atualize o <code>NEWS.md</code> correspondente.</li>
+</ul></div>
 <div class="section level2">
 <h2 id="arquitetura-quatro-camadas-dependência-só-para-baixo">Arquitetura: quatro camadas, dependência só para baixo<a class="anchor" aria-label="anchor" href="#arquitetura-quatro-camadas-depend%C3%AAncia-s%C3%B3-para-baixo"></a></h2>
 <pre><code>4. Leitura (sf) ──────── fbds_read()  fbds_get()
