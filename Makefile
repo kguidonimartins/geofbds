@@ -17,7 +17,7 @@ run-app: ## execute the Shiny application locally
 	$(R) "devtools::load_all('.'); shiny::runApp('inst/shiny')" 2>&1 | tee out-shiny.txt
 
 deploy: ## deploy the Shiny application with rsconnect
-	$(R) "if (!requireNamespace('rsconnect', quietly = TRUE)) stop('Install rsconnect first'); rsconnect::deployApp(appDir = 'inst/shiny')"
+	Rscript dev/deploy.R 2>&1 | tee out-deploy.txt
 
 catalog: ## regenerate data/fbds_municipios.rda from data-raw/TABELA CONSOLIDADA.xls
 	Rscript data-raw/build_catalog.R
