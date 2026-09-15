@@ -33,6 +33,141 @@ install_if_needed <- function(package, minimum_version = NULL) {
   invisible()
 }
 
+# Localiza o bloco de `geofbds` no lockfile, sem desserializar o JSON: o
+# arquivo e gerado pelo renv e so precisamos trocar duas linhas dele.
+geofbds_lockfile_block <- function(path) {
+  lines <- readLines(path, warn = FALSE)
+  start <- grep('^    "geofbds": \\{$', lines)
+
+  if (length(start) != 1L) {
+    stop("Registro de geofbds nao encontrado em ", path, ".", call. = FALSE)
+  }
+
+  closing <- which(grepl("^    \\},?[[:space:]]*$", lines[-(1:start)]))[[1L]] +
+    start
+
+  list(lines = lines, block = (start + 1L):(closing - 1L))
+}
+
+lockfile_property <- function(path, key) {
+  found <- geofbds_lockfile_block(path)
+  hit <- found$block[grepl(
+    sprintf('^[[:space:]]*"%s":', key),
+    found$lines[found$block]
+  )]
+
+  if (length(hit) != 1L) {
+    stop("Chave ", key, " nao encontrada em ", path, ".", call. = FALSE)
+  }
+
+  sub('^[[:space:]]*"[^"]+":[[:space:]]*"([^"]*)".*$', "\\1", found$lines[hit])
+}
+
+# O lockfile guarda o commit de `geofbds` que estava instalado quando rodou
+# `renv::snapshot()`, que envelhece a cada push. O shinyapps.io instala o
+# pacote a partir desse commit, entao o deploy precisa fixar o ultimo commit
+# publicado no remote — senao o aplicativo sobe com uma versao antiga.
+set_lockfile_ref <- function(path, sha) {
+  found <- geofbds_lockfile_block(path)
+  lines <- found$lines
+
+  for (key in c("RemoteRef", "RemoteSha")) {
+    hit <- found$block[grepl(
+      sprintf('^[[:space:]]*"%s":', key),
+      lines[found$block]
+    )]
+
+    if (length(hit) != 1L) {
+      stop("Chave ", key, " nao encontrada em ", path, ".", call. = FALSE)
+    }
+
+    lines[hit] <- sub(
+      '"([^"]*)"([[:space:]]*,?[[:space:]]*)$',
+      sprintf('"%s"\\2', sha),
+      lines[hit]
+    )
+
+    if (!grepl(sha, lines[hit], fixed = TRUE)) {
+      stop("Nao foi possivel atualizar ", key, " em ", path, ".", call. = FALSE)
+    }
+  }
+
+  writeLines(lines, path)
+
+  invisible(sha)
+}
+
+remote_head_sha <- function(path) {
+  host <- lockfile_property(path, "RemoteHost")
+  username <- lockfile_property(path, "RemoteUsername")
+  repo <- lockfile_property(path, "RemoteRepo")
+  url <- sprintf(
+    "https://%s/%s/%s.git",
+    sub("^api\\.", "", host),
+    username,
+    repo
+  )
+  git <- Sys.which("git")
+
+  if (!nzchar(git)) {
+    stop(
+      "git nao encontrado: necessario para ler o commit de ",
+      url,
+      ".",
+      call. = FALSE
+    )
+  }
+
+  out <- suppressWarnings(system2(
+    git,
+    c("ls-remote", "--exit-code", "--quiet", url, "HEAD"),
+    stdout = TRUE,
+    stderr = TRUE
+  ))
+  status <- attr(out, "status")
+
+  if (!is.null(status) && status != 0L) {
+    stop(
+      "Nao foi possivel ler o commit mais recente de ",
+      url,
+      ": ",
+      paste(trimws(out), collapse = " "),
+      call. = FALSE
+    )
+  }
+
+  sha <- sub("[[:space:]].*$", "", out[[1L]])
+
+  if (!grepl("^[0-9a-f]{40}$", sha)) {
+    stop("Commit invalido para ", url, ": ", sha, call. = FALSE)
+  }
+
+  sha
+}
+
+# Commit local, para conferir se o que sera enviado ja esta publicado.
+local_head_sha <- function() {
+  git <- Sys.which("git")
+
+  if (!nzchar(git)) {
+    return(NA_character_)
+  }
+
+  out <- suppressWarnings(system2(
+    git,
+    c("rev-parse", "HEAD"),
+    stdout = TRUE,
+    stderr = TRUE
+  ))
+  status <- attr(out, "status")
+
+  if (!is.null(status) && status != 0L) {
+    return(NA_character_)
+  }
+
+  sub("[[:space:]].*$", "", out[[1L]])
+}
+
 # rsconnect 1.10.0 fixed verbose deployments using the httr2 backend.
 install_if_needed("rsconnect", "1.10.0")
 install_if_needed("dotenv")
@@ -74,9 +209,29 @@ app_lockfile <- file.path(app_dir, "renv.lock")
 if (!file.exists(lockfile)) {
   stop("Execute renv::snapshot() antes do deploy.", call. = FALSE)
 }
+
+sha <- remote_head_sha(lockfile)
+local_sha <- local_head_sha()
+
+if (!is.na(local_sha) && !identical(local_sha, sha)) {
+  warning(
+    "HEAD local (",
+    substr(local_sha, 1L, 7L),
+    ") difere do commit publicado (",
+    substr(sha, 1L, 7L),
+    "): o shinyapps.io instalara o geofbds publicado, nao o local. ",
+    "Faca push antes do deploy.",
+    call. = FALSE
+  )
+}
+
+cat("geofbds fixado em", substr(sha, 1L, 7L), "(ultimo commit do remote).\n")
+
 if (!file.copy(lockfile, app_lockfile, overwrite = FALSE)) {
   stop("Nao foi possivel preparar o renv.lock para o deploy.", call. = FALSE)
 }
+
+set_lockfile_ref(app_lockfile, sha)
 
 tryCatch(
   rsconnect::deployApp(

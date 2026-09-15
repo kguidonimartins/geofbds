@@ -1203,8 +1203,8 @@
       "RemoteHost": "api.github.com",
       "RemoteRepo": "geofbds",
       "RemoteUsername": "kguidonimartins",
-      "RemoteRef": "6e51e2fb23b0b3ee37bdb1b53a9bc6577534cde3",
-      "RemoteSha": "6e51e2fb23b0b3ee37bdb1b53a9bc6577534cde3",
+      "RemoteRef": "2a12c0bd10a72d32f6cc5504b7a1d61c73b59a32",
+      "RemoteSha": "2a12c0bd10a72d32f6cc5504b7a1d61c73b59a32",
       "NeedsCompilation": "no",
       "Author": "Karlo Guidoni [aut, cre]",
       "Maintainer": "Karlo Guidoni <kguidonimartins@gmail.com>"
