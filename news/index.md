@@ -26,6 +26,14 @@
 - O aplicativo Shiny registra eventos de sessão, seleções, etapas,
   arquivos, dados carregados, renderização do mapa, downloads e erros no
   log do processo.
+- O aplicativo Shiny passou a usar um tema Bootstrap 5 com `bslib`
+  (cores derivadas de uma cor primária própria, cabeçalhos em cartões,
+  navegação em abas e alternância de modo claro/escuro), substituindo o
+  layout padrão do Bootstrap 3.
+- Adicionada a aba “Sobre” no aplicativo Shiny, com a origem e os
+  metadados oficiais dos dados, as camadas disponíveis, a citação
+  recomendada, o contato e a relação do aplicativo com o pacote
+  `geofbds`.
 - Corrigida a paleta de atributos categóricos sem cores predefinidas.
 - Corrigido o acesso ao catálogo `fbds_municipios` quando as funções são
   chamadas pelo operador `::` sem
