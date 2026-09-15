@@ -27,3 +27,7 @@
   arquivos, dados carregados, renderização do mapa, downloads e erros no
   log do processo.
 - Corrigida a paleta de atributos categóricos sem cores predefinidas.
+- Corrigido o acesso ao catálogo `fbds_municipios` quando as funções são
+  chamadas pelo operador `::` sem
+  [`library(geofbds)`](https://github.com/kguidonimartins/geofbds): a
+  resolução falhava com `object 'fbds_municipios' not found`.
