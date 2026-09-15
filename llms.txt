@@ -36,9 +36,10 @@ fbds_layers()
 ## Uso básico
 
 Geocódigo do IBGE, nome de município ou sigla de UF — tudo passa por
-\[fbds_resolve()\], o resolvedor universal do pacote. Nome ambíguo
-(existe em mais de uma UF) nunca é escolhido em silêncio: gera erro
-classificado, listando os candidatos.
+[`fbds_resolve()`](https://kguidonimartins.github.io/geofbds/reference/fbds_resolve.md),
+o resolvedor universal do pacote. Nome ambíguo (existe em mais de uma
+UF) nunca é escolhido em silêncio: gera erro classificado, listando os
+candidatos.
 
 ``` r
 
@@ -85,9 +86,10 @@ app_ro <- fbds_get("1100031", layer = "app", type = "APP")
 ## Download em escala: por estado
 
 O ganho principal deste pacote sobre o script que o antecedeu:
-\[fbds_download_state()\] estima o volume antes de baixar, processa os
-municípios em blocos, e retoma de onde parou se a execução for
-interrompida — sem rebaixar o que já está completo.
+[`fbds_download_state()`](https://kguidonimartins.github.io/geofbds/reference/fbds_download_state.md)
+estima o volume antes de baixar, processa os municípios em blocos, e
+retoma de onde parou se a execução for interrompida — sem rebaixar o que
+já está completo.
 
 ``` r
 
@@ -125,7 +127,10 @@ Na interface, siga esta sequência:
 6.  Escolha um atributo temático ou explore o mapa; o ZIP validado fica
     disponível após o carregamento.
 
-Com o pacote e as dependências instalados, execute:
+Acesse via: <https://kguidonimartins.shinyapps.io/geofbds/>
+
+Também é possível executar o aplicativo localmente. Com o pacote e as
+dependências instalados, execute:
 
 ``` bash
 make run-app
@@ -137,9 +142,8 @@ são 250 MB por consulta e 250.000 feições; eles podem ser ajustados com
 
 ## Cache
 
-Por padrão, tudo fica em \[tools::R_user_dir()\]`("geofbds", "cache")`,
-com confirmação no primeiro uso em sessão interativa. Para outro
-diretório:
+Por padrão, tudo fica em `~/.cache/R/geofbds/`, com confirmação no
+primeiro uso em sessão interativa. Para outro diretório:
 
 ``` r
 
@@ -169,6 +173,10 @@ Quatro camadas, cada uma testável sozinha:
 Veja
 [`vignette("geofbds", package = "geofbds")`](https://kguidonimartins.github.io/geofbds/articles/geofbds.md)
 para mais detalhes.
+
+## Projetos relacionados
+
+[pyFBDS](https://github.com/open-geodata/pyFBDS): desenvolvido em python
 
 # Package index
 
