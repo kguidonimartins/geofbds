@@ -36,11 +36,13 @@ install_if_needed <- function(package, minimum_version = NULL) {
 # rsconnect 1.10.0 fixed verbose deployments using the httr2 backend.
 install_if_needed("rsconnect", "1.10.0")
 install_if_needed("dotenv")
+global_libraries <- .libPaths()
 
 root <- normalizePath(".")
 invisible(loadNamespace("rsconnect"))
 invisible(loadNamespace("dotenv"))
 source(file.path(root, "renv", "activate.R"))
+.libPaths(unique(c(.libPaths(), global_libraries)))
 
 env_file <- file.path(root, ".env")
 
