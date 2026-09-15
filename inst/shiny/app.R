@@ -4,6 +4,9 @@ if (!requireNamespace("shiny", quietly = TRUE)) {
 if (!requireNamespace("leaflet", quietly = TRUE)) {
   stop("Instale o pacote 'leaflet' para executar o aplicativo.", call. = FALSE)
 }
+if (!requireNamespace("bslib", quietly = TRUE)) {
+  stop("Instale o pacote 'bslib' para executar o aplicativo.", call. = FALSE)
+}
 if (!requireNamespace("sf", quietly = TRUE)) {
   stop("Instale o pacote 'sf' para executar o aplicativo.", call. = FALSE)
 }
@@ -41,56 +44,69 @@ shiny_log(
   max_features = app_config$max_features
 )
 
-ui <- shiny::fluidPage(
-  shiny::titlePanel("Explorador Geo FBDS"),
-  shiny::sidebarLayout(
-    shiny::sidebarPanel(
-      shiny::tags$details(
-        class = "usage-guide",
-        open = TRUE,
-        shiny::tags$summary(shiny::tags$strong("Como usar")),
+app_theme <- bslib::bs_theme(
+  version = 5,
+  bootswatch = "flatly",
+  primary = "#1b9e77"
+)
+
+ui <- bslib::page_sidebar(
+  theme = app_theme,
+  title = "Explorador Geo FBDS",
+  fillable = FALSE,
+  sidebar = bslib::sidebar(
+    width = 400,
+    bslib::input_dark_mode(),
+    bslib::accordion(
+      open = TRUE,
+      bslib::accordion_panel(
+        "Como usar",
         shiny::tags$ol(
           lapply(
             shiny_usage_steps(),
             function(step) shiny::tags$li(step)
           )
         )
-      ),
-      shiny::uiOutput("next_step"),
-      shiny::selectizeInput(
-        "municipality",
-        "Município",
-        choices = NULL,
-        selected = NULL,
-        options = list(placeholder = "Digite para buscar...")
-      ),
-      shiny::selectInput("layer", "Camada", choices = layer_choices),
-      shiny::actionButton("discover", "Descobrir tipos", class = "btn-primary"),
-      shiny::selectInput(
-        "type",
-        "Tipo do conjunto",
-        choices = NULL,
-        selected = NULL
-      ),
-      shiny::actionButton("plan", "Planejar consulta"),
-      shiny::actionButton(
-        "download_data",
-        "Baixar e visualizar",
-        class = "btn-success"
-      ),
-      shiny::uiOutput("theme_ui"),
-      shiny::hr(),
-      shiny::uiOutput("limits"),
-      shiny::verbatimTextOutput("status")
+      )
     ),
-    shiny::mainPanel(
-      shiny::h4("Plano"),
-      shiny::verbatimTextOutput("plan_summary"),
-      shiny::uiOutput("download_ui"),
-      leaflet::leafletOutput("map", height = "650px"),
-      shiny::h4("Estatísticas"),
-      shiny::tableOutput("stats")
-    )
+    shiny::uiOutput("next_step"),
+    shiny::selectizeInput(
+      "municipality",
+      "Município",
+      choices = NULL,
+      selected = NULL,
+      options = list(placeholder = "Digite para buscar...")
+    ),
+    shiny::selectInput("layer", "Camada", choices = layer_choices),
+    shiny::actionButton("discover", "Descobrir tipos", class = "btn-primary"),
+    shiny::selectInput(
+      "type",
+      "Tipo do conjunto",
+      choices = NULL,
+      selected = NULL
+    ),
+    shiny::actionButton("plan", "Planejar consulta"),
+    shiny::actionButton(
+      "download_data",
+      "Baixar e visualizar",
+      class = "btn-success"
+    ),
+    shiny::uiOutput("theme_ui"),
+    shiny::uiOutput("limits"),
+    shiny::verbatimTextOutput("status")
+  ),
+  bslib::card(
+    bslib::card_header("Plano"),
+    shiny::verbatimTextOutput("plan_summary")
+  ),
+  shiny::uiOutput("download_ui"),
+  bslib::card(
+    bslib::card_header("Mapa"),
+    leaflet::leafletOutput("map", height = "650px")
+  ),
+  bslib::card(
+    bslib::card_header("Estatísticas"),
+    shiny::tableOutput("stats")
   )
 )
 
@@ -493,9 +509,11 @@ server <- function(input, output, session) {
 
   output$next_step <- shiny::renderUI({
     info <- shiny_next_step(values$step)
-    shiny::wellPanel(
-      shiny::tags$strong(info$title),
-      shiny::tags$p(info$message)
+    bslib::card(
+      bslib::card_body(
+        shiny::tags$strong(info$title),
+        shiny::tags$p(info$message, class = "mb-0")
+      )
     )
   })
 

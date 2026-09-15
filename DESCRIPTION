@@ -30,6 +30,7 @@ Imports:
     vroom,
     xml2
 Suggests:
+    bslib,
     janitor,
     knitr,
     leaflet,
