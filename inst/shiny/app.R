@@ -37,6 +37,7 @@ municipality_choices <- stats::setNames(
 )
 layer_info <- geofbds::fbds_layers()
 layer_choices <- stats::setNames(layer_info$layer, layer_info$description)
+package_version <- as.character(utils::packageVersion("geofbds"))
 shiny_log(
   "app_loaded",
   municipalities = nrow(catalog),
@@ -44,70 +45,98 @@ shiny_log(
   max_features = app_config$max_features
 )
 
-app_theme <- bslib::bs_theme(
-  version = 5,
-  bootswatch = "flatly",
-  primary = "#1b9e77"
+# Bootstrap 5 puro (sem preset do Bootswatch): o bslib deriva as cores de
+# link, botão e navbar a partir de `primary`, o que mantém contraste AA com
+# texto branco. O verde é mais escuro que o do mapa porque ali a cor é dado,
+# não interface.
+app_theme <- bslib::bs_add_rules(
+  bslib::bs_theme(version = 5, primary = "#146c50", navbar_bg = "#146c50"),
+  ".navbar { --bs-navbar-color: rgba(255, 255, 255, 0.85); }
+   .navbar bslib-input-dark-mode {
+     --text-1: rgba(255, 255, 255, 0.9) !important;
+     --text-2: rgba(255, 255, 255, 0.7) !important;
+     color: rgba(255, 255, 255, 0.9);
+   }"
 )
 
-ui <- bslib::page_sidebar(
+ui <- bslib::page_navbar(
   theme = app_theme,
   title = "Explorador Geo FBDS",
   fillable = FALSE,
-  sidebar = bslib::sidebar(
-    width = 400,
-    bslib::input_dark_mode(),
-    bslib::accordion(
-      open = TRUE,
-      bslib::accordion_panel(
-        "Como usar",
-        shiny::tags$ol(
-          lapply(
-            shiny_usage_steps(),
-            function(step) shiny::tags$li(step)
+  bslib::nav_panel(
+    "Consulta",
+    bslib::layout_sidebar(
+      fillable = FALSE,
+      sidebar = bslib::sidebar(
+        width = 400,
+        bslib::accordion(
+          open = TRUE,
+          bslib::accordion_panel(
+            "Como usar",
+            shiny::tags$ol(
+              lapply(
+                shiny_usage_steps(),
+                function(step) shiny::tags$li(step)
+              )
+            )
           )
-        )
+        ),
+        shiny::uiOutput("next_step"),
+        shiny::selectizeInput(
+          "municipality",
+          "Município",
+          choices = NULL,
+          selected = NULL,
+          options = list(placeholder = "Digite para buscar...")
+        ),
+        shiny::selectInput("layer", "Camada", choices = layer_choices),
+        shiny::actionButton(
+          "discover",
+          "Descobrir tipos",
+          class = "btn-primary"
+        ),
+        shiny::selectInput(
+          "type",
+          "Tipo do conjunto",
+          choices = NULL,
+          selected = NULL
+        ),
+        shiny::actionButton("plan", "Planejar consulta"),
+        shiny::actionButton(
+          "download_data",
+          "Baixar e visualizar",
+          class = "btn-success"
+        ),
+        shiny::uiOutput("theme_ui"),
+        shiny::uiOutput("limits"),
+        shiny::verbatimTextOutput("status")
+      ),
+      bslib::card(
+        bslib::card_header("Plano"),
+        shiny::verbatimTextOutput("plan_summary")
+      ),
+      shiny::uiOutput("download_ui"),
+      bslib::card(
+        bslib::card_header("Mapa"),
+        leaflet::leafletOutput("map", height = "650px")
+      ),
+      bslib::card(
+        bslib::card_header("Estatísticas"),
+        shiny::tableOutput("stats")
       )
-    ),
-    shiny::uiOutput("next_step"),
-    shiny::selectizeInput(
-      "municipality",
-      "Município",
-      choices = NULL,
-      selected = NULL,
-      options = list(placeholder = "Digite para buscar...")
-    ),
-    shiny::selectInput("layer", "Camada", choices = layer_choices),
-    shiny::actionButton("discover", "Descobrir tipos", class = "btn-primary"),
-    shiny::selectInput(
-      "type",
-      "Tipo do conjunto",
-      choices = NULL,
-      selected = NULL
-    ),
-    shiny::actionButton("plan", "Planejar consulta"),
-    shiny::actionButton(
-      "download_data",
-      "Baixar e visualizar",
-      class = "btn-success"
-    ),
-    shiny::uiOutput("theme_ui"),
-    shiny::uiOutput("limits"),
-    shiny::verbatimTextOutput("status")
+    )
   ),
-  bslib::card(
-    bslib::card_header("Plano"),
-    shiny::verbatimTextOutput("plan_summary")
+  bslib::nav_panel(
+    "Sobre",
+    shiny_about_ui(
+      layer_info,
+      max_bytes = app_config$max_bytes,
+      max_features = app_config$max_features,
+      package_version = package_version
+    )
   ),
-  shiny::uiOutput("download_ui"),
-  bslib::card(
-    bslib::card_header("Mapa"),
-    leaflet::leafletOutput("map", height = "650px")
-  ),
-  bslib::card(
-    bslib::card_header("Estatísticas"),
-    shiny::tableOutput("stats")
-  )
+  bslib::nav_spacer(),
+  bslib::nav_item(bslib::input_dark_mode())
 )
 
 server <- function(input, output, session) {

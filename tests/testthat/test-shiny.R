@@ -1,6 +1,7 @@
 skip_if_not_installed("shiny")
 skip_if_not_installed("leaflet")
 skip_if_not_installed("sf")
+skip_if_not_installed("bslib")
 
 app_dir <- system.file("shiny", package = "geofbds")
 if (!file.exists(file.path(app_dir, "helpers.R"))) {
@@ -139,6 +140,34 @@ test_that("structured logs include event context", {
   expect_match(messages[[1]], "session_id=session-1")
   expect_match(messages[[1]], "selected=app,APP")
 })
+test_that("the about panel documents provenance, contact and limits", {
+  html <- as.character(shiny_about_ui(
+    geofbds::fbds_layers(),
+    max_bytes = 250 * 1024^2,
+    max_features = 250000,
+    package_version = "0.0.0.9000"
+  ))
+
+  expect_match(html, "https://geo.fbds.org.br", fixed = TRUE)
+  expect_match(
+    html,
+    "https://geo.fbds.org.br/Metadados%20Mapeamento%20FBDS.pdf",
+    fixed = TRUE
+  )
+  expect_match(html, "1:25.000", fixed = TRUE)
+  expect_match(html, "Irrestrito", fixed = TRUE)
+  expect_match(html, "mailto:kguidonimartins@gmail.com", fixed = TRUE)
+  expect_match(
+    html,
+    "https://github.com/kguidonimartins/geofbds",
+    fixed = TRUE
+  )
+  expect_match(html, "0.0.0.9000", fixed = TRUE)
+  expect_match(html, "250.0 MB", fixed = TRUE)
+  expect_match(html, "250.000", fixed = TRUE)
+  expect_match(html, "hidrografia", fixed = TRUE)
+})
+
 test_that("invalid geometries are repaired before mapping", {
   invalid <- sf::st_sf(
     id = 1L,

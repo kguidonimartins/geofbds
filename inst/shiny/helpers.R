@@ -396,6 +396,212 @@ shiny_usage_steps <- function() {
   )
 }
 
+shiny_about_metadata <- function() {
+  list(
+    "Título" = "Mapeamento em Alta Resolução dos Biomas Brasileiros",
+    "Autor" = "Fundação Brasileira para o Desenvolvimento Sustentável (FBDS)",
+    "Temas" = paste(
+      "uso e cobertura do solo; hidrografia; áreas de preservação",
+      "permanente ripárias"
+    ),
+    "Período" = "01/01/2013 a 30/04/2023",
+    "Resolução espacial" = "1:25.000",
+    "Representação" = paste(
+      "vetor (pontos, linhas e polígonos), shapefile articulado por UF e",
+      "município"
+    ),
+    "Referência espacial" = "UTM, SIRGAS 2000 (elipsóide GRS 1980)",
+    "Restrições legais" = "Irrestrito (metadados de 30/04/2023)",
+    "Padrão dos metadados" = "ISO 19115:2003/19139"
+  )
+}
+
+shiny_definition_list <- function(items) {
+  shiny::tags$dl(
+    class = "row",
+    lapply(names(items), function(name) {
+      shiny::tagList(
+        shiny::tags$dt(class = "col-sm-4", name),
+        shiny::tags$dd(class = "col-sm-8", items[[name]])
+      )
+    })
+  )
+}
+
+shiny_layers_table <- function(layers) {
+  shiny::tags$table(
+    class = "table table-sm",
+    shiny::tags$thead(
+      shiny::tags$tr(
+        shiny::tags$th("Camada"),
+        shiny::tags$th("Diretório no portal"),
+        shiny::tags$th("Conteúdo")
+      )
+    ),
+    shiny::tags$tbody(
+      lapply(seq_len(nrow(layers)), function(i) {
+        shiny::tags$tr(
+          shiny::tags$td(shiny::tags$code(layers$layer[[i]])),
+          shiny::tags$td(shiny::tags$code(layers$dir[[i]])),
+          shiny::tags$td(layers$description[[i]])
+        )
+      })
+    )
+  )
+}
+
+shiny_about_ui <- function(layers, max_bytes, max_features, package_version) {
+  external <- function(href, label) {
+    shiny::tags$a(href = href, target = "_blank", rel = "noopener", label)
+  }
+  metadata_url <- paste0(
+    "https://geo.fbds.org.br/Metadados%20Mapeamento%20FBDS.pdf"
+  )
+  contact <- "kguidonimartins@gmail.com"
+  repository <- "https://github.com/kguidonimartins/geofbds"
+  feature_limit <- format(
+    max_features,
+    big.mark = ".",
+    decimal.mark = ",",
+    scientific = FALSE
+  )
+
+  bslib::layout_columns(
+    col_widths = c(6, 6, 6, 6, 12),
+    bslib::card(
+      bslib::card_header("Origem dos dados"),
+      bslib::card_body(
+        shiny::tags$p(
+          "Os dados são publicados pela Fundação Brasileira para o",
+          "Desenvolvimento Sustentável (FBDS) no portal",
+          external("https://geo.fbds.org.br", "Geo FBDS"),
+          ", dentro do projeto “Mapeamento em Alta Resolução dos Biomas",
+          "Brasileiros”. O geofbds não produz nem altera os dados:",
+          "automatiza a descoberta, o download e a leitura dos shapefiles",
+          "publicados por UF e município."
+        ),
+        shiny_definition_list(shiny_about_metadata()),
+        shiny::tags$p(
+          class = "mb-0",
+          "Metadados oficiais:",
+          external(metadata_url, "Metadados do Mapeamento FBDS (PDF)"),
+          "."
+        )
+      )
+    ),
+    bslib::card(
+      bslib::card_header("Camadas disponíveis"),
+      bslib::card_body(
+        shiny_layers_table(layers),
+        shiny::tags$p(
+          class = "mb-0",
+          "Cada camada é distribuída em vários conjuntos de arquivos por",
+          "município; use “Descobrir tipos” na aba Consulta para listar os",
+          "tipos disponíveis para a sua seleção."
+        )
+      )
+    ),
+    bslib::card(
+      bslib::card_header("Como citar"),
+      bslib::card_body(
+        shiny::tags$p(shiny::tags$strong("O pacote:")),
+        shiny::tags$p(paste0(
+          "Guidoni, K. (2026). geofbds: Download and Read Municipal Data ",
+          "from Geo FBDS. R package. ",
+          repository
+        )),
+        shiny::tags$p(shiny::tags$strong("Os dados:")),
+        shiny::tags$p(paste0(
+          "Fundação Brasileira para o Desenvolvimento Sustentável (FBDS) ",
+          "(2023). Mapeamento em Alta Resolução dos Biomas Brasileiros. ",
+          "https://geo.fbds.org.br"
+        )),
+        shiny::tags$p(
+          class = "mb-0",
+          shiny::tags$code("citation(\"geofbds\")"),
+          "no R mostra as duas entradas prontas."
+        )
+      )
+    ),
+    bslib::card(
+      bslib::card_header("Contato e código"),
+      bslib::card_body(
+        shiny::tags$p(
+          "Dúvidas, correções, sugestões e problemas no download:",
+          shiny::tags$a(href = paste0("mailto:", contact), contact),
+          "ou uma",
+          external(paste0(repository, "/issues"), "issue no GitHub"),
+          "."
+        ),
+        shiny::tags$ul(
+          class = "mb-0",
+          shiny::tags$li(external(
+            repository,
+            "Código do pacote e do aplicativo"
+          )),
+          shiny::tags$li(external(
+            "https://kguidonimartins.github.io/geofbds/",
+            "Documentação do pacote"
+          )),
+          shiny::tags$li(external(
+            "https://geo.fbds.org.br",
+            "Portal Geo FBDS (dados e metodologia)"
+          )),
+          shiny::tags$li(external(
+            metadata_url,
+            "Metadados oficiais da FBDS"
+          ))
+        )
+      )
+    ),
+    bslib::card(
+      bslib::card_header("Sobre este aplicativo"),
+      bslib::card_body(
+        shiny::tags$p(
+          paste0(
+            "Esta interface é um aplicativo Shiny (tema Bootstrap 5 via ",
+            "bslib) construído sobre o pacote geofbds versão ",
+            package_version,
+            ", instalado no servidor. O geofbds é um projeto independente: ",
+            "não tem vínculo com a FBDS além de consumir os dados que ela ",
+            "publica."
+          ),
+          " O código é aberto sob licença MIT e está em ",
+          external(repository, "github.com/kguidonimartins/geofbds"),
+          "."
+        ),
+        shiny::tags$p(
+          "Cada sessão usa um diretório temporário próprio. Nenhum dado é",
+          "persistido no servidor: ao encerrar a sessão, os arquivos",
+          "baixados são removidos. Os limites por consulta são de ",
+          shiny::tags$strong(shiny_format_bytes(max_bytes)),
+          " e",
+          shiny::tags$strong(feature_limit),
+          "feições; eles podem ser ajustados no servidor com as variáveis",
+          shiny::tags$code("GEOFBDS_SHINY_MAX_BYTES"),
+          "e",
+          shiny::tags$code("GEOFBDS_SHINY_MAX_FEATURES"),
+          "."
+        ),
+        shiny::tags$p(
+          "Os shapefiles são validados antes da leitura e o ZIP",
+          "disponibilizado é o mesmo conjunto baixado do portal, sem",
+          "recortes nem edições."
+        ),
+        shiny::tags$p(
+          class = "mb-0",
+          shiny::tags$em(
+            "O campo “Restrições Legais” dos metadados oficiais da FBDS diz",
+            "“Irrestrito”, mas confira os metadados antes de redistribuir ou",
+            "usar os dados comercialmente. Este aplicativo não é fonte de",
+            "aconselhamento jurídico."
+          )
+        )
+      )
+    )
+  )
+}
+
 shiny_zip_manifest <- function(manifest, zip_path) {
   paths <- unique(manifest$path[manifest$status %in% c("downloaded", "cached")])
   if (length(paths) == 0L || any(!file.exists(paths))) {
