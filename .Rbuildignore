@@ -1,11 +1,12 @@
 ^LICENSE\.md$
 ^data-raw$
-^geo-fbds\.Rproj$
+^geofbds\.Rproj$
 ^dev$
 ^AGENTS\.md$
 ^docs$
 ^_pkgdown\.yml$
 ^README\.Rmd$
+^README\.html$
 ^\.git$
 ^\.github$
 ^\.claude$

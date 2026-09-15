@@ -6,12 +6,18 @@ R := Rscript -e
 PKGNAME := $(shell sed -n "s/Package: *\([^ ]*\)/\1/p" DESCRIPTION)
 PKGVERS := $(shell sed -n "s/Version: *\([^ ]*\)/\1/p" DESCRIPTION)
 
-.PHONY: help tests clean check-cran spell url-check cran-build submit-cran cran-release catalog
+.PHONY: help tests clean check-cran spell url-check cran-build submit-cran cran-release catalog run-app deploy
 
 all: install tests check clean ## run install_deps, build, install, tests, check, and clean
 
 document: ## refresh function documentation
 	$(R) "devtools::document()"
+
+run-app: ## execute the Shiny application locally
+	$(R) "devtools::load_all('.'); shiny::runApp('inst/shiny')" 2>&1 | tee out-shiny.txt
+
+deploy: ## deploy the Shiny application with rsconnect
+	$(R) "if (!requireNamespace('rsconnect', quietly = TRUE)) stop('Install rsconnect first'); rsconnect::deployApp(appDir = 'inst/shiny')"
 
 catalog: ## regenerate data/fbds_municipios.rda from data-raw/TABELA CONSOLIDADA.xls
 	Rscript data-raw/build_catalog.R
@@ -23,7 +29,7 @@ gp: ## get goodpractice' suggestions
 	$(R) "goodpractice::gp()" 2>&1 | tee out-gp.txt
 
 check: build ## check package
-	$(R) "Sys.setenv('_R_CHECK_SYSTEM_CLOCK_' = 0); devtools::check(document = FALSE, build_args = c('--no-build-vignettes'))" 2>&1 | tee out-check.txt
+	$(R) "Sys.setenv('_R_CHECK_SYSTEM_CLOCK_' = 0); devtools::check(document = FALSE)" 2>&1 | tee out-check.txt
 
 check-cran: build ## check como o CRAN (devtools::check); grave em out-check-cran.txt
 	$(R) "Sys.setenv('_R_CHECK_SYSTEM_CLOCK_' = 0); devtools::check(document = FALSE, cran = TRUE, args = c('--no-manual'))" 2>&1 | tee out-check-cran.txt

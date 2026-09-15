@@ -32,9 +32,11 @@ Imports:
 Suggests:
     janitor,
     knitr,
+    leaflet,
     readxl,
     rmarkdown,
     sf,
+    shiny,
     testthat (>= 3.0.0),
     webfakes,
     withr
