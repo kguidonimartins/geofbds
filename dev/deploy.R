@@ -74,15 +74,45 @@ if (!file.copy(lockfile, app_lockfile, overwrite = FALSE)) {
 }
 
 tryCatch(
-  rsconnect::deployApp(
-    appName = "geofbds",
-    appDir = app_dir,
-    account = "kguidonimartins",
-    upload = TRUE,
-    launch.browser = TRUE,
-    forceUpdate = TRUE,
-    logLevel = "verbose",
-    lint = TRUE
-  ),
+  {
+    lock <- jsonlite::read_json(app_lockfile, simplifyVector = FALSE)
+    package <- lock$Packages$geofbds
+    remote_fields <- c(
+      package$RemoteUsername,
+      package$RemoteRepo,
+      package$RemoteRef,
+      package$RemoteSha
+    )
+
+    if (is.null(package) || any(!nzchar(remote_fields))) {
+      stop(
+        "O renv.lock nao contem a origem GitHub completa de geofbds.",
+        call. = FALSE
+      )
+    }
+
+    package$GithubUsername <- package$RemoteUsername
+    package$GithubRepo <- package$RemoteRepo
+    package$GithubRef <- package$RemoteRef
+    package$GithubSHA1 <- package$RemoteSha
+    lock$Packages$geofbds <- package
+    jsonlite::write_json(
+      lock,
+      app_lockfile,
+      auto_unbox = TRUE,
+      pretty = TRUE
+    )
+
+    rsconnect::deployApp(
+      appName = "geofbds",
+      appDir = app_dir,
+      account = "kguidonimartins",
+      upload = TRUE,
+      launch.browser = TRUE,
+      forceUpdate = TRUE,
+      logLevel = "verbose",
+      lint = TRUE
+    )
+  },
   finally = unlink(app_lockfile)
 )

@@ -1199,14 +1199,15 @@
       "Config/roxygen2/version": "8.0.0",
       "LazyData": "true",
       "VignetteBuilder": "knitr",
-      "Author": "Karlo Guidoni [aut, cre]",
-      "Maintainer": "Karlo Guidoni <kguidonimartins@gmail.com>",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
-      "RemoteUsername": "kguidonimartins",
       "RemoteRepo": "geofbds",
-      "RemoteRef": "3c5fdca2783845794f5bb51654a4ba780cbab4e8",
-      "RemoteSha": "3c5fdca2783845794f5bb51654a4ba780cbab4e8"
+      "RemoteUsername": "kguidonimartins",
+      "RemoteRef": "6e51e2fb23b0b3ee37bdb1b53a9bc6577534cde3",
+      "RemoteSha": "6e51e2fb23b0b3ee37bdb1b53a9bc6577534cde3",
+      "NeedsCompilation": "no",
+      "Author": "Karlo Guidoni [aut, cre]",
+      "Maintainer": "Karlo Guidoni <kguidonimartins@gmail.com>"
     },
     "glue": {
       "Package": "glue",
