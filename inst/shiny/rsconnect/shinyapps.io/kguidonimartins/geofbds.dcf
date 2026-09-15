@@ -5,6 +5,6 @@ account: kguidonimartins
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 17910006
-bundleId: 12555284
+bundleId: 12555294
 url: https://kguidonimartins.shinyapps.io/geofbds/
 version: 1
