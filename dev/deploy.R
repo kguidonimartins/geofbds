@@ -168,6 +168,46 @@ local_head_sha <- function() {
   sub("[[:space:]].*$", "", out[[1L]])
 }
 
+# O servidor instala o `geofbds` pela procedencia gravada no DESCRIPTION do
+# pacote instalado aqui: o manifest.json leva o DESCRIPTION inteiro e o
+# shinyapps.io le dali `GithubRepo`, `GithubUsername`, `GithubRef` e
+# `GithubSHA1`. Pacote instalado do diretorio local (ou `load_all()`) nao tem
+# esses campos, entao o servidor nao sabe qual commit buscar e reaproveita um
+# build antigo do pacote — mesmo com o `renv.lock` correto. A instalacao vai
+# para uma biblioteca so dele, sem dependencias, para nao desalinhar as
+# versoes que o `renv.lock` declara para o resto do aplicativo.
+install_published_geofbds <- function(path, sha) {
+  username <- lockfile_property(path, "RemoteUsername")
+  repo <- lockfile_property(path, "RemoteRepo")
+  lib <- file.path(tempdir(), "geofbds-deploy")
+
+  dir.create(lib, showWarnings = FALSE, recursive = TRUE)
+  install_if_needed("pak")
+  pak::pkg_install(
+    sprintf("%s/%s@%s", username, repo, sha),
+    lib = lib,
+    dependencies = FALSE,
+    ask = FALSE
+  )
+
+  installed <- utils::packageDescription("geofbds", lib.loc = lib)
+
+  if (!identical(installed$GithubSHA1, sha)) {
+    stop(
+      "O geofbds instalado em ",
+      lib,
+      " nao registra o commit ",
+      sha,
+      ".",
+      call. = FALSE
+    )
+  }
+
+  .libPaths(unique(c(lib, .libPaths())))
+
+  invisible(lib)
+}
+
 # rsconnect 1.10.0 fixed verbose deployments using the httr2 backend.
 install_if_needed("rsconnect", "1.10.0")
 install_if_needed("dotenv")
@@ -226,6 +266,8 @@ if (!is.na(local_sha) && !identical(local_sha, sha)) {
 }
 
 cat("geofbds fixado em", substr(sha, 1L, 7L), "(ultimo commit do remote).\n")
+
+install_published_geofbds(lockfile, sha)
 
 if (!file.copy(lockfile, app_lockfile, overwrite = FALSE)) {
   stop("Nao foi possivel preparar o renv.lock para o deploy.", call. = FALSE)
