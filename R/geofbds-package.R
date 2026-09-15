@@ -8,7 +8,33 @@ NULL
 
 utils::globalVariables("fbds_municipios")
 
+#' Ler o catalogo de municipios a partir de `data/`
+#'
+#' `fbds_municipios` mora em `data/`, que so entra no caminho de busca quando
+#' o pacote e anexado por `library()`. Chamadas como `geofbds::fbds_resolve()`
+#' carregam apenas a namespace: `data()` e a unica forma de trazer o objeto de
+#' la, e e o que `.onLoad()` usa para prende-lo a namespace sob demanda.
+#'
+#' @return O tibble `fbds_municipios`.
+#' @noRd
+municipios_data <- function() {
+  env <- new.env(parent = emptyenv())
+  utils::data("fbds_municipios", package = "geofbds", envir = env)
+  get("fbds_municipios", envir = env)
+}
+
 .onLoad <- function(libname, pkgname) {
+  # Prende o catalogo a namespace (e nao a search path) para que ele exista
+  # em `geofbds::` sem `library()`. Sob demanda: o banco lazy so e lido no
+  # primeiro uso do catalogo.
+  ns <- asNamespace(pkgname)
+  delayedAssign(
+    "fbds_municipios",
+    municipios_data(),
+    eval.env = ns,
+    assign.env = ns
+  )
+
   op <- options()
   op.geofbds <- list(
     geofbds.base_url = "https://geo.fbds.org.br",

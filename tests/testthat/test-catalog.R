@@ -62,3 +62,16 @@ test_that("fbds_ufs lists 27 UFs with correct counts", {
   expect_equal(out$n_municipios[out$uf == "SP"], 645L)
   expect_equal(out$n_municipios[out$uf == "MG"], 853L)
 })
+
+test_that("o catalogo e alcancavel sem anexar o pacote", {
+  ns <- asNamespace("geofbds")
+
+  # `geofbds::fbds_resolve()` carrega so a namespace, sem `library()`: o
+  # catalogo (que mora em `data/`) precisa ser um binding dela, senao a
+  # resolucao falha com "object 'fbds_municipios' not found".
+  expect_true(exists("fbds_municipios", envir = ns, inherits = FALSE))
+  expect_s3_class(
+    get("fbds_municipios", envir = ns, inherits = FALSE),
+    "tbl_df"
+  )
+})
