@@ -213,35 +213,6 @@ shiny_thematic_fields <- function(data) {
   )]
 }
 
-shiny_known_colors <- function(field) {
-  switch(
-    field,
-    CLASSE_USO = c(
-      "água" = "#3182bd",
-      "área antropizada" = "#e6550d",
-      "área edificada" = "#de2d26",
-      "formação florestal" = "#006d2c",
-      "formação não florestal" = "#74c476",
-      "silvicultura" = "#238b8d"
-    ),
-    HIDRO = c(
-      "curso d'água (0 - 10m)" = "#6baed6",
-      "curso d'água (10 - 50m)" = "#08519c",
-      "massa d'água" = "#31a8c8",
-      "nascente" = "#756bb1"
-    ),
-    NATUREZA = c(
-      "natural" = "#2ca25f",
-      "artificial" = "#de2d26"
-    ),
-    RIO = c(
-      "presente" = "#2171b5",
-      "ausente" = "#bdbdbd"
-    ),
-    NULL
-  )
-}
-
 shiny_palette_for_field <- function(data, field) {
   value <- data[[field]]
   domain <- unique(value[!is.na(value)])
@@ -263,34 +234,13 @@ shiny_palette_for_field <- function(data, field) {
     ))
   }
 
-  domain <- as.character(domain)
-  known <- shiny_known_colors(field)
-  fallback <- c(
-    "#1b9e77",
-    "#d95f02",
-    "#7570b3",
-    "#e7298a",
-    "#66a61e",
-    "#e6ab02",
-    "#a6761d",
-    "#666666"
-  )
-  colors <- if (is.null(known)) {
-    rep(NA_character_, length(domain))
-  } else {
-    unname(known[domain])
-  }
-  missing <- is.na(colors) | !nzchar(colors)
-  colors[missing] <- rep(
-    fallback,
-    length.out = sum(missing)
-  )
+  colors <- geofbds::fbds_palette(field, value)
 
   list(
     mode = "categorical",
     palette = leaflet::colorFactor(
-      palette = colors,
-      domain = domain,
+      palette = unname(colors),
+      domain = names(colors),
       na.color = "#bdbdbd"
     ),
     values = value

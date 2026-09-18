@@ -16,6 +16,7 @@ make document      # devtools::document()
 make tests         # devtools::test()
 make check          # devtools::check()
 make catalog        # regenera data/fbds_municipios.rda a partir do xls
+make qml            # regenera inst/qgis/*.qml a partir de fbds_palette()
 air format .        # formata R/*.R (rode antes de commitar)
 ```
 

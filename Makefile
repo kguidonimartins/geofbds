@@ -6,7 +6,7 @@ R := Rscript -e
 PKGNAME := $(shell sed -n "s/Package: *\([^ ]*\)/\1/p" DESCRIPTION)
 PKGVERS := $(shell sed -n "s/Version: *\([^ ]*\)/\1/p" DESCRIPTION)
 
-.PHONY: help tests clean check-cran spell url-check cran-build submit-cran cran-release catalog run-app deploy
+.PHONY: help tests clean check-cran spell url-check cran-build submit-cran cran-release catalog qml run-app deploy
 
 all: install tests check clean ## run install_deps, build, install, tests, check, and clean
 
@@ -21,6 +21,9 @@ deploy: ## deploy the Shiny application with rsconnect
 
 catalog: ## regenerate data/fbds_municipios.rda from data-raw/TABELA CONSOLIDADA.xls
 	Rscript data-raw/build_catalog.R
+
+qml: ## regenerate inst/qgis/*.qml from fbds_palette()
+	Rscript data-raw/build_qml.R
 
 build: document ## build package
 	$(R) "devtools::build()"

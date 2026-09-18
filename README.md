@@ -81,6 +81,45 @@ app_ro <- fbds_read(m, layer = "app", type = "APP")
 app_ro <- fbds_get("1100031", layer = "app", type = "APP")
 ```
 
+## Colorir por classe
+
+`fbds_palette()` devolve um vetor de cores nomeado para os campos
+temáticos mais comuns dos dados (`CLASSE_USO`, `HIDRO`, `NATUREZA`,
+`RIO`), para não redefinir a paleta a cada script. As cores de
+`CLASSE_USO` seguem o [MapBiomas Coleção 11](https://mapbiomas.org/),
+para consistência visual com a plataforma mais usada para mapas de uso e
+cobertura do solo no Brasil:
+
+``` r
+fbds_palette("CLASSE_USO")
+
+uso <- fbds_get("Serra da Saudade", layer = "uso", type = "USO")
+plot(uso["CLASSE_USO"], col = fbds_palette("CLASSE_USO", uso$CLASSE_USO))
+```
+
+Classes sem cor predefinida (de outro campo, ou uma categoria nova)
+recebem uma cor de reserva estável, em vez de erro.
+
+Para quem prefere o QGIS, o pacote traz essas mesmas cores como estilos
+categorizados prontos (`.qml`). Como eles ficam dentro do pacote
+instalado, `fbds_qgis_style()` copia os que você quiser para o diretório
+atual (a raiz do seu projeto, por padrão):
+
+``` r
+fbds_qgis_style_fields()
+fbds_qgis_style() # copia todos para "."; use dest_dir para outro lugar
+```
+
+Depois, no QGIS: abra o shapefile correspondente e carregue o `.qml` em
+Propriedades da camada \> Simbologia \> Estilo \> Carregar Estilo.
+
+| Campo        | Arquivo          | Aplica em                |
+|--------------|------------------|--------------------------|
+| `CLASSE_USO` | `CLASSE_USO.qml` | `USO.shp`, `APP_USO.shp` |
+| `HIDRO`      | `HIDRO.qml`      | `APP.shp`                |
+| `NATUREZA`   | `NATUREZA.qml`   | `MASSAS_DAGUA.shp`       |
+| `RIO`        | `RIO.qml`        | `MASSAS_DAGUA.shp`       |
+
 ## Download em escala: por estado
 
 O ganho principal deste pacote sobre o script que o antecedeu:
