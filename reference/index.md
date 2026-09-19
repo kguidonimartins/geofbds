@@ -73,3 +73,12 @@ Ler os dados baixados como `sf`.
 - [`geofbds`](https://kguidonimartins.github.io/geofbds/reference/geofbds-package.md)
   [`geofbds-package`](https://kguidonimartins.github.io/geofbds/reference/geofbds-package.md)
   : geofbds: Download and Read Municipal Data from Geo FBDS
+
+## Estilos QGIS e paleta
+
+- [`fbds_palette()`](https://kguidonimartins.github.io/geofbds/reference/fbds_palette.md)
+  : Cores padronizadas para classes tematicas dos dados da FBDS
+- [`fbds_qgis_style()`](https://kguidonimartins.github.io/geofbds/reference/fbds_qgis_style.md)
+  : Copiar os estilos do QGIS para o projeto do usuario
+- [`fbds_qgis_style_fields()`](https://kguidonimartins.github.io/geofbds/reference/fbds_qgis_style_fields.md)
+  : Campos com estilo do QGIS disponivel

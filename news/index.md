@@ -39,3 +39,40 @@
   chamadas pelo operador `::` sem
   [`library(geofbds)`](https://github.com/kguidonimartins/geofbds): a
   resolução falhava com `object 'fbds_municipios' not found`.
+- Adicionada
+  [`fbds_palette()`](https://kguidonimartins.github.io/geofbds/reference/fbds_palette.md),
+  que devolve um vetor de cores nomeado para colorir classes temáticas
+  dos shapefiles da FBDS (`CLASSE_USO`, `HIDRO`, `NATUREZA`, `RIO`), com
+  cores de reserva estáveis para classes sem cor predefinida. O
+  aplicativo Shiny passou a usar essa mesma função, em vez de manter sua
+  própria cópia da paleta.
+- As cores de `CLASSE_USO` passaram a seguir o MapBiomas Coleção 11,
+  para consistência visual com a plataforma mais usada para mapas de uso
+  e cobertura do solo no Brasil. Quatro das seis classes têm
+  equivalência direta (água, área edificada, formação florestal,
+  silvicultura); as outras duas (área antropizada, formação não
+  florestal) são agregados da FBDS sem classe-folha equivalente no
+  MapBiomas e usam a aproximação mais próxima (Mosaico de Usos e
+  Formação Campestre, respectivamente).
+- Corrigida a cor da classe `HIDRO` `"curso d'água (>10m)"` (presente em
+  `hidrografia/RIOS_DUPLOS`), que antes caía na paleta de reserva por
+  não estar na lista de cores conhecidas.
+- Adicionados estilos categorizados do QGIS (`inst/qgis/*.qml`) para
+  `CLASSE_USO`, `HIDRO`, `MAPBIOMAS`, `NATUREZA` e `RIO`, com as mesmas
+  cores de
+  [`fbds_palette()`](https://kguidonimartins.github.io/geofbds/reference/fbds_palette.md).
+  Basta carregá-los em Propriedades da camada \> Simbologia \> Estilo \>
+  Carregar Estilo, depois de abrir o shapefile correspondente no QGIS.
+  Regenerados por `make qml` (`data-raw/build_qml.R`) sempre que as
+  cores de
+  [`fbds_palette()`](https://kguidonimartins.github.io/geofbds/reference/fbds_palette.md)
+  mudarem.
+- Adicionadas
+  [`fbds_qgis_style()`](https://kguidonimartins.github.io/geofbds/reference/fbds_qgis_style.md)
+  e
+  [`fbds_qgis_style_fields()`](https://kguidonimartins.github.io/geofbds/reference/fbds_qgis_style_fields.md):
+  os arquivos `.qml` ficam dentro do pacote instalado e não são visíveis
+  para quem instala via CRAN/`remotes::install_github()`;
+  [`fbds_qgis_style()`](https://kguidonimartins.github.io/geofbds/reference/fbds_qgis_style.md)
+  copia os estilos escolhidos para fora do pacote (por padrão, para o
+  diretório de trabalho atual), de onde o QGIS consegue carregá-los.

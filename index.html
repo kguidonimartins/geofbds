@@ -128,10 +128,57 @@
 <span><span class="va">app_ro</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fbds_get.html">fbds_get</a></span><span class="op">(</span><span class="st">"1100031"</span>, layer <span class="op">=</span> <span class="st">"app"</span>, type <span class="op">=</span> <span class="st">"APP"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
+<h2 id="colorir-por-classe">Colorir por classe<a class="anchor" aria-label="anchor" href="#colorir-por-classe"></a>
+</h2>
+<p><code><a href="reference/fbds_palette.html">fbds_palette()</a></code> devolve um vetor de cores nomeado para os campos temáticos mais comuns dos dados (<code>CLASSE_USO</code>, <code>HIDRO</code>, <code>NATUREZA</code>, <code>RIO</code>), para não redefinir a paleta a cada script. As cores de <code>CLASSE_USO</code> seguem o <a href="https://mapbiomas.org/" class="external-link">MapBiomas Coleção 11</a>, para consistência visual com a plataforma mais usada para mapas de uso e cobertura do solo no Brasil:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/fbds_palette.html">fbds_palette</a></span><span class="op">(</span><span class="st">"CLASSE_USO"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">uso</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fbds_get.html">fbds_get</a></span><span class="op">(</span><span class="st">"Serra da Saudade"</span>, layer <span class="op">=</span> <span class="st">"uso"</span>, type <span class="op">=</span> <span class="st">"USO"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">uso</span><span class="op">[</span><span class="st">"CLASSE_USO"</span><span class="op">]</span>, col <span class="op">=</span> <span class="fu"><a href="reference/fbds_palette.html">fbds_palette</a></span><span class="op">(</span><span class="st">"CLASSE_USO"</span>, <span class="va">uso</span><span class="op">$</span><span class="va">CLASSE_USO</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Classes sem cor predefinida (de outro campo, ou uma categoria nova) recebem uma cor de reserva estável, em vez de erro.</p>
+<p>Para quem prefere o QGIS, o pacote traz essas mesmas cores como estilos categorizados prontos (<code>.qml</code>). Como eles ficam dentro do pacote instalado, <code><a href="reference/fbds_qgis_style.html">fbds_qgis_style()</a></code> copia os que você quiser para o diretório atual (a raiz do seu projeto, por padrão):</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/fbds_qgis_style_fields.html">fbds_qgis_style_fields</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/fbds_qgis_style.html">fbds_qgis_style</a></span><span class="op">(</span><span class="op">)</span> <span class="co"># copia todos para "."; use dest_dir para outro lugar</span></span></code></pre></div>
+<p>Depois, no QGIS: abra o shapefile correspondente e carregue o <code>.qml</code> em Propriedades da camada &gt; Simbologia &gt; Estilo &gt; Carregar Estilo.</p>
+<table class="table">
+<thead><tr>
+<th>Campo</th>
+<th>Arquivo</th>
+<th>Aplica em</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>CLASSE_USO</code></td>
+<td><code>CLASSE_USO.qml</code></td>
+<td>
+<code>USO.shp</code>, <code>APP_USO.shp</code>
+</td>
+</tr>
+<tr>
+<td><code>HIDRO</code></td>
+<td><code>HIDRO.qml</code></td>
+<td><code>APP.shp</code></td>
+</tr>
+<tr>
+<td><code>NATUREZA</code></td>
+<td><code>NATUREZA.qml</code></td>
+<td><code>MASSAS_DAGUA.shp</code></td>
+</tr>
+<tr>
+<td><code>RIO</code></td>
+<td><code>RIO.qml</code></td>
+<td><code>MASSAS_DAGUA.shp</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level2">
 <h2 id="download-em-escala-por-estado">Download em escala: por estado<a class="anchor" aria-label="anchor" href="#download-em-escala-por-estado"></a>
 </h2>
 <p>O ganho principal deste pacote sobre o script que o antecedeu: <code><a href="reference/fbds_download_state.html">fbds_download_state()</a></code> estima o volume antes de baixar, processa os municípios em blocos, e retoma de onde parou se a execução for interrompida — sem rebaixar o que já está completo.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ro</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fbds_download_state.html">fbds_download_state</a></span><span class="op">(</span><span class="st">"RO"</span>, layers <span class="op">=</span> <span class="st">"app"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># interrompida no meio? rode de novo: só os pendentes sao processados</span></span>
@@ -141,9 +188,9 @@
 <div class="section level2">
 <h2 id="linha-de-comando">Linha de comando<a class="anchor" aria-label="anchor" href="#linha-de-comando"></a>
 </h2>
-<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="ex">Rscript</span> inst/scripts/geofbds municipality 1100031 1100049 <span class="at">--layers</span><span class="op">=</span>app,uso</span>
-<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="ex">Rscript</span> inst/scripts/geofbds state RO <span class="at">--workers</span><span class="op">=</span>6 <span class="at">--yes</span></span>
-<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="ex">Rscript</span> inst/scripts/geofbds files RO <span class="at">--layers</span><span class="op">=</span>app</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="ex">Rscript</span> inst/scripts/geofbds municipality 1100031 1100049 <span class="at">--layers</span><span class="op">=</span>app,uso</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="ex">Rscript</span> inst/scripts/geofbds state RO <span class="at">--workers</span><span class="op">=</span>6 <span class="at">--yes</span></span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a><span class="ex">Rscript</span> inst/scripts/geofbds files RO <span class="at">--layers</span><span class="op">=</span>app</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="aplicativo-shiny">Aplicativo Shiny<a class="anchor" aria-label="anchor" href="#aplicativo-shiny"></a>
@@ -160,14 +207,14 @@
 </ol>
 <p>Acesse via: <a href="https://kguidonimartins.shinyapps.io/geofbds/" class="external-link uri">https://kguidonimartins.shinyapps.io/geofbds/</a></p>
 <p>Também é possível executar o aplicativo localmente. Com o pacote e as dependências instalados, execute:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">make</span> run-app</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">make</span> run-app</span></code></pre></div>
 <p>O aplicativo usa um diretório temporário por sessão. Os limites padrão são 250 MB por consulta e 250.000 feições; eles podem ser ajustados com <code>GEOFBDS_SHINY_MAX_BYTES</code> e <code>GEOFBDS_SHINY_MAX_FEATURES</code>.</p>
 </div>
 <div class="section level2">
 <h2 id="cache">Cache<a class="anchor" aria-label="anchor" href="#cache"></a>
 </h2>
 <p>Por padrão, tudo fica em <code>~/.cache/R/geofbds/</code>, com confirmação no primeiro uso em sessão interativa. Para outro diretório:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/fbds_cache_set.html">fbds_cache_set</a></span><span class="op">(</span><span class="st">"dados/geo-fbds"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/fbds_cache_status.html">fbds_cache_status</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
