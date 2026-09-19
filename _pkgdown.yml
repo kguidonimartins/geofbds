@@ -51,6 +51,12 @@ reference:
   contents:
   - geofbds-package
 
+- title: Estilos QGIS e paleta
+  contents:
+  - fbds_palette
+  - fbds_qgis_style
+  - fbds_qgis_style_fields
+
 articles:
 - title: Vinhetas
   contents:

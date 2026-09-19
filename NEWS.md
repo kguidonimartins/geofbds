@@ -51,7 +51,7 @@
   `hidrografia/RIOS_DUPLOS`), que antes caía na paleta de reserva por não
   estar na lista de cores conhecidas.
 - Adicionados estilos categorizados do QGIS (`inst/qgis/*.qml`) para
-  `CLASSE_USO`, `HIDRO`, `NATUREZA` e `RIO`, com as mesmas cores de
+  `CLASSE_USO`, `HIDRO`, `MAPBIOMAS`, `NATUREZA` e `RIO`, com as mesmas cores de
   `fbds_palette()`. Basta carregá-los em Propriedades da camada > Simbologia
   > Estilo > Carregar Estilo, depois de abrir o shapefile correspondente no
   QGIS. Regenerados por `make qml` (`data-raw/build_qml.R`) sempre que as
