@@ -13,7 +13,7 @@
     <symbol type="fill" name="0" alpha="1" clip_to_extent="1" force_rhr="0">
       <layer class="SimpleFill" enabled="1" locked="0" pass="0">
         <prop k="color" v="37,50,228,255"/>
-        <prop k="outline_color" v="35,35,35,255"/>
+        <prop k="outline_color" v="0,0,0,0"/>
         <prop k="outline_style" v="solid"/>
         <prop k="outline_width" v="0.26"/>
         <prop k="outline_width_unit" v="MM"/>
@@ -23,7 +23,7 @@
     <symbol type="fill" name="1" alpha="1" clip_to_extent="1" force_rhr="0">
       <layer class="SimpleFill" enabled="1" locked="0" pass="0">
         <prop k="color" v="255,239,195,255"/>
-        <prop k="outline_color" v="35,35,35,255"/>
+        <prop k="outline_color" v="0,0,0,0"/>
         <prop k="outline_style" v="solid"/>
         <prop k="outline_width" v="0.26"/>
         <prop k="outline_width_unit" v="MM"/>
@@ -33,7 +33,7 @@
     <symbol type="fill" name="2" alpha="1" clip_to_extent="1" force_rhr="0">
       <layer class="SimpleFill" enabled="1" locked="0" pass="0">
         <prop k="color" v="212,39,30,255"/>
-        <prop k="outline_color" v="35,35,35,255"/>
+        <prop k="outline_color" v="0,0,0,0"/>
         <prop k="outline_style" v="solid"/>
         <prop k="outline_width" v="0.26"/>
         <prop k="outline_width_unit" v="MM"/>
@@ -43,7 +43,7 @@
     <symbol type="fill" name="3" alpha="1" clip_to_extent="1" force_rhr="0">
       <layer class="SimpleFill" enabled="1" locked="0" pass="0">
         <prop k="color" v="31,141,73,255"/>
-        <prop k="outline_color" v="35,35,35,255"/>
+        <prop k="outline_color" v="0,0,0,0"/>
         <prop k="outline_style" v="solid"/>
         <prop k="outline_width" v="0.26"/>
         <prop k="outline_width_unit" v="MM"/>
@@ -53,7 +53,7 @@
     <symbol type="fill" name="4" alpha="1" clip_to_extent="1" force_rhr="0">
       <layer class="SimpleFill" enabled="1" locked="0" pass="0">
         <prop k="color" v="214,188,116,255"/>
-        <prop k="outline_color" v="35,35,35,255"/>
+        <prop k="outline_color" v="0,0,0,0"/>
         <prop k="outline_style" v="solid"/>
         <prop k="outline_width" v="0.26"/>
         <prop k="outline_width_unit" v="MM"/>
@@ -63,7 +63,7 @@
     <symbol type="fill" name="5" alpha="1" clip_to_extent="1" force_rhr="0">
       <layer class="SimpleFill" enabled="1" locked="0" pass="0">
         <prop k="color" v="122,89,0,255"/>
-        <prop k="outline_color" v="35,35,35,255"/>
+        <prop k="outline_color" v="0,0,0,0"/>
         <prop k="outline_style" v="solid"/>
         <prop k="outline_width" v="0.26"/>
         <prop k="outline_width_unit" v="MM"/>

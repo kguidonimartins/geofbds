@@ -49,7 +49,7 @@ build_categorized_qml <- function(field) {
       '    <symbol type="fill" name="%d" alpha="1" clip_to_extent="1" force_rhr="0">',
       '      <layer class="SimpleFill" enabled="1" locked="0" pass="0">',
       '        <prop k="color" v="%s"/>',
-      '        <prop k="outline_color" v="35,35,35,255"/>',
+      '        <prop k="outline_color" v="0,0,0,0"/>',
       '        <prop k="outline_style" v="solid"/>',
       '        <prop k="outline_width" v="0.26"/>',
       '        <prop k="outline_width_unit" v="MM"/>',
