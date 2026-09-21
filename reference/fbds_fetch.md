@@ -54,7 +54,10 @@ fbds_fetch(
 ## Value
 
 Um manifesto (tibble), tambem gravado em
-`{dest_dir}/_manifests/{run_id}.csv`.
+`{dest_dir}/_manifests/{run_id}.csv`. Cada linha registra a versao do
+pacote que executou o download; o resumo cumulativo fica em
+`{dest_dir}/manifest.json` e pode ser lido com
+[`fbds_manifest_status()`](https://kguidonimartins.github.io/geofbds/reference/fbds_manifest_status.md).
 
 ## Examples
 

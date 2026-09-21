@@ -4,6 +4,12 @@
 
 ### Novidades
 
+- Adicionada
+  [`fbds_manifest_status()`](https://kguidonimartins.github.io/geofbds/reference/fbds_manifest_status.md),
+  que consulta o histórico agregado de downloads em `manifest.json` (ou
+  reconstrói o resumo a partir do índice CSV legado), e passou a
+  registrar a versão do pacote em cada manifesto
+  ([\#5](https://github.com/kguidonimartins/geofbds/issues/5)).
 - Adicionado um aplicativo Shiny em `inst/shiny/` para selecionar um
   município, camada e tipo, estimar o download, carregar os dados como
   `sf` e visualizar as geometrias em um mapa.

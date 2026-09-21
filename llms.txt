@@ -257,6 +257,8 @@ Planejar e executar downloads, por município.
   : Planejar um download
 - [`fbds_fetch()`](https://kguidonimartins.github.io/geofbds/reference/fbds_fetch.md)
   : Executar um plano de download
+- [`fbds_manifest_status()`](https://kguidonimartins.github.io/geofbds/reference/fbds_manifest_status.md)
+  : Consultar o resumo do historico de downloads
 - [`fbds_download_municipality()`](https://kguidonimartins.github.io/geofbds/reference/fbds_download_municipality.md)
   : Baixar dados de um ou mais municipios
 - [`fbds_validate()`](https://kguidonimartins.github.io/geofbds/reference/fbds_validate.md)

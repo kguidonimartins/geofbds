@@ -38,7 +38,8 @@
 <h2 class="pkg-version" data-toc-text="0.0.0.9000" id="geofbds-0009000">geofbds 0.0.0.9000<a class="anchor" aria-label="anchor" href="#geofbds-0009000"></a></h2>
 <div class="section level3">
 <h3 id="novidades-0-0-0-9000">Novidades<a class="anchor" aria-label="anchor" href="#novidades-0-0-0-9000"></a></h3>
-<ul><li>Adicionado um aplicativo Shiny em <code>inst/shiny/</code> para selecionar um município, camada e tipo, estimar o download, carregar os dados como <code>sf</code> e visualizar as geometrias em um mapa.</li>
+<ul><li>Adicionada <code><a href="../reference/fbds_manifest_status.html">fbds_manifest_status()</a></code>, que consulta o histórico agregado de downloads em <code>manifest.json</code> (ou reconstrói o resumo a partir do índice CSV legado), e passou a registrar a versão do pacote em cada manifesto (<a href="https://github.com/kguidonimartins/geofbds/issues/5" class="external-link">#5</a>).</li>
+<li>Adicionado um aplicativo Shiny em <code>inst/shiny/</code> para selecionar um município, camada e tipo, estimar o download, carregar os dados como <code>sf</code> e visualizar as geometrias em um mapa.</li>
 <li>O mapa do aplicativo oferece <code>OpenStreetMap</code> como fundo padrão e <code>Esri.WorldImagery</code> como alternativa.</li>
 <li>O aplicativo Shiny colore as geometrias por atributos temáticos, com legendas categóricas ou contínuas, seleção de campo e reparo de geometrias inválidas antes da renderização.</li>
 <li>O aplicativo Shiny usa diretórios temporários exclusivos por sessão, valida conjuntos de shapefile antes da leitura e disponibiliza um ZIP validado para download.</li>

@@ -98,7 +98,9 @@ resultaria (<code>status</code> <code>"cached"</code> ou <code>"skipped"</code>)
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>Um manifesto (tibble), tambem gravado em
-<code>{dest_dir}/_manifests/{run_id}.csv</code>.</p>
+<code>{dest_dir}/_manifests/{run_id}.csv</code>. Cada linha registra a versao do
+pacote que executou o download; o resumo cumulativo fica em
+<code>{dest_dir}/manifest.json</code> e pode ser lido com <code><a href="fbds_manifest_status.html">fbds_manifest_status()</a></code>.</p>
     </div>
 
     <div class="section level2">
