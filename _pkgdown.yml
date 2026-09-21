@@ -25,6 +25,7 @@ reference:
   contents:
   - fbds_plan
   - fbds_fetch
+  - fbds_manifest_status
   - fbds_download_municipality
   - fbds_validate
 

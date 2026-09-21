@@ -90,6 +90,34 @@ test_that("fbds_fetch downloads files and writes a manifest with sha256", {
     paste0(manifest$run_id[[1]], ".csv")
   )))
   expect_true(file.exists(file.path(dest_dir, "_manifests", "_index.csv")))
+  expect_true(file.exists(file.path(dest_dir, "manifest.json")))
+
+  summary <- fbds_manifest_status(dest_dir)
+  expect_equal(summary$n_files, 3L)
+  expect_equal(summary$bytes_total, 3700)
+  expect_equal(summary$n_downloaded, 3L)
+  expect_equal(summary$n_cached, 0L)
+  expect_equal(summary$n_failed, 0L)
+  expect_equal(summary$n_skipped, 0L)
+  expect_equal(
+    summary$pkg_version,
+    as.character(utils::packageVersion("geofbds"))
+  )
+  expect_equal(summary$run_ids[[1]], manifest$run_id[[1]])
+
+  manifest_on_disk <- jsonlite::read_json(
+    file.path(dest_dir, "manifest.json"),
+    simplifyVector = TRUE
+  )
+  expect_equal(as.integer(manifest_on_disk$n_files), 3L)
+  expect_equal(manifest_on_disk$pkg_version, summary$pkg_version)
+
+  manifest_json <- jsonlite::read_json(
+    file.path(dest_dir, "manifest.json"),
+    simplifyVector = FALSE
+  )
+  expect_type(manifest_json$run_ids, "list")
+  expect_equal(manifest_json$run_ids[[1]], manifest$run_id[[1]])
 })
 
 test_that("fbds_fetch(dry_run = TRUE) touches no network and downloads nothing", {

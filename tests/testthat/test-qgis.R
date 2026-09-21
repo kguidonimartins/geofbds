@@ -1,7 +1,14 @@
 test_that("fbds_qgis_style_fields lists the packaged .qml files", {
   expect_setequal(
     fbds_qgis_style_fields(),
-    c("CLASSE_USO", "HIDRO", "MAPBIOMAS", "NATUREZA", "RIO")
+    c(
+      "CLASSE_USO",
+      "HIDRO",
+      "MAPBIOMAS",
+      "NATUREZA",
+      "PLANAFLOR-RECOMPOSICAO",
+      "RIO"
+    )
   )
 })
 

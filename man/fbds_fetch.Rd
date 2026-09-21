@@ -29,7 +29,9 @@ resultaria (\code{status} \code{"cached"} ou \code{"skipped"}) sem tocar a rede.
 }
 \value{
 Um manifesto (tibble), tambem gravado em
-\verb{\{dest_dir\}/_manifests/\{run_id\}.csv}.
+\verb{\{dest_dir\}/_manifests/\{run_id\}.csv}. Cada linha registra a versao do
+pacote que executou o download; o resumo cumulativo fica em
+\code{{dest_dir}/manifest.json} e pode ser lido com \code{\link[=fbds_manifest_status]{fbds_manifest_status()}}.
 }
 \description{
 Sobre \code{\link[curl:multi_download]{curl::multi_download()}} com \code{resume = TRUE}: substitui o laco

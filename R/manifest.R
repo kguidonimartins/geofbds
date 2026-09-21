@@ -18,6 +18,7 @@ empty_manifest <- function() {
     http_status = integer(0),
     attempts = integer(0),
     error = character(0),
+    pkg_version = character(0),
     timestamp = as.POSIXct(character(0))
   )
 }
@@ -73,6 +74,10 @@ build_manifest <- function(
     http_status = http_status,
     attempts = attempts,
     error = error,
+    pkg_version = rep(
+      as.character(utils::packageVersion("geofbds")),
+      nrow(plan)
+    ),
     timestamp = Sys.time()
   )
 }
@@ -81,7 +86,7 @@ build_manifest <- function(
 #'
 #' `{dest}/_manifests/{run_id}.csv`, sem sobrescrever execucoes
 #' anteriores (SPECS.md §2.2-13), mais um indice cumulativo em
-#' `{dest}/_manifests/_index.csv`.
+#' `{dest}/_manifests/_index.csv` e um resumo em `{dest}/manifest.json`.
 #'
 #' @noRd
 write_manifest <- function(manifest, dest_dir) {
@@ -96,6 +101,11 @@ write_manifest <- function(manifest, dest_dir) {
   index_row <- tibble::tibble(
     run_id = run_id,
     timestamp = manifest$timestamp[[1]],
+    pkg_version = if ("pkg_version" %in% names(manifest)) {
+      manifest$pkg_version[[1]]
+    } else {
+      NA_character_
+    },
     n_files = nrow(manifest),
     n_downloaded = sum(manifest$status == "downloaded"),
     n_cached = sum(manifest$status == "cached"),
@@ -115,7 +125,175 @@ write_manifest <- function(manifest, dest_dir) {
   }
   vroom::vroom_write(index, index_path, delim = ",")
 
+  write_manifest_summary(manifest_summary_from_index(index), dest_dir)
+
   invisible(run_path)
+}
+
+empty_manifest_status <- function() {
+  tibble::tibble(
+    last_updated = as.POSIXct(character(0)),
+    pkg_version = character(0),
+    n_files = integer(0),
+    bytes_total = double(0),
+    n_downloaded = integer(0),
+    n_cached = integer(0),
+    n_failed = integer(0),
+    n_skipped = integer(0),
+    run_ids = list()
+  )
+}
+
+manifest_summary_from_index <- function(index) {
+  if (nrow(index) == 0L) {
+    return(empty_manifest_status())
+  }
+
+  timestamp <- index$timestamp
+  if (!inherits(timestamp, "POSIXct")) {
+    timestamp <- as.POSIXct(timestamp, tz = "UTC")
+  }
+  last_updated <- if (all(is.na(timestamp))) {
+    as.POSIXct(NA, tz = "UTC")
+  } else {
+    max(timestamp, na.rm = TRUE)
+  }
+
+  pkg_version <- NA_character_
+  if ("pkg_version" %in% names(index)) {
+    versions <- as.character(index$pkg_version)
+    versions <- versions[!is.na(versions) & nzchar(versions)]
+    if (length(versions) > 0L) {
+      pkg_version <- versions[[length(versions)]]
+    }
+  }
+
+  tibble::tibble(
+    last_updated = last_updated,
+    pkg_version = pkg_version,
+    n_files = as.integer(sum(index$n_files, na.rm = TRUE)),
+    bytes_total = sum(index$bytes, na.rm = TRUE),
+    n_downloaded = as.integer(sum(index$n_downloaded, na.rm = TRUE)),
+    n_cached = as.integer(sum(index$n_cached, na.rm = TRUE)),
+    n_failed = as.integer(sum(index$n_failed, na.rm = TRUE)),
+    n_skipped = as.integer(sum(index$n_skipped, na.rm = TRUE)),
+    run_ids = list(unique(as.character(index$run_id)))
+  )
+}
+
+manifest_summary_json <- function(summary) {
+  last_updated <- summary$last_updated[[1]]
+  last_updated <- if (is.na(last_updated)) {
+    NULL
+  } else {
+    format(last_updated, "%Y-%m-%dT%H:%M:%OS3Z", tz = "UTC")
+  }
+
+  pkg_version <- summary$pkg_version[[1]]
+  pkg_version <- if (is.na(pkg_version)) NULL else pkg_version
+
+  list(
+    last_updated = last_updated,
+    pkg_version = pkg_version,
+    n_files = summary$n_files[[1]],
+    bytes_total = summary$bytes_total[[1]],
+    n_downloaded = summary$n_downloaded[[1]],
+    n_cached = summary$n_cached[[1]],
+    n_failed = summary$n_failed[[1]],
+    n_skipped = summary$n_skipped[[1]],
+    run_ids = I(summary$run_ids[[1]])
+  )
+}
+
+write_manifest_summary <- function(summary, dest_dir) {
+  if (nrow(summary) == 0L) {
+    return(invisible(NULL))
+  }
+
+  jsonlite::write_json(
+    manifest_summary_json(summary),
+    file.path(dest_dir, "manifest.json"),
+    auto_unbox = TRUE,
+    pretty = TRUE,
+    na = "null"
+  )
+
+  invisible(NULL)
+}
+
+read_manifest_summary_json <- function(path) {
+  data <- jsonlite::read_json(path, simplifyVector = TRUE)
+
+  last_updated <- data$last_updated
+  if (is.null(last_updated) || length(last_updated) == 0L) {
+    last_updated <- as.POSIXct(NA, tz = "UTC")
+  } else {
+    last_updated <- as.POSIXct(
+      sub("Z$", "", last_updated),
+      format = "%Y-%m-%dT%H:%M:%OS",
+      tz = "UTC"
+    )
+  }
+
+  pkg_version <- data$pkg_version
+  if (is.null(pkg_version) || length(pkg_version) == 0L) {
+    pkg_version <- NA_character_
+  }
+
+  run_ids <- data$run_ids
+  if (is.null(run_ids)) {
+    run_ids <- character(0)
+  }
+
+  tibble::tibble(
+    last_updated = last_updated,
+    pkg_version = as.character(pkg_version),
+    n_files = as.integer(data$n_files),
+    bytes_total = as.numeric(data$bytes_total),
+    n_downloaded = as.integer(data$n_downloaded),
+    n_cached = as.integer(data$n_cached),
+    n_failed = as.integer(data$n_failed),
+    n_skipped = as.integer(data$n_skipped),
+    run_ids = list(as.character(run_ids))
+  )
+}
+
+read_manifest_index <- function(path) {
+  vroom::vroom(path, show_col_types = FALSE, altrep = FALSE)
+}
+
+#' Consultar o resumo do historico de downloads
+#'
+#' Le o resumo em `{dest_dir}/manifest.json`, gerado por [fbds_fetch()],
+#' ou reconstroi o resultado a partir de `{dest_dir}/_manifests/_index.csv`
+#' quando o destino foi criado por uma versao anterior do pacote.
+#'
+#' @param dest_dir Diretorio que contem os downloads. Padrao
+#'   [fbds_cache_dir()].
+#'
+#' @return Um tibble de uma linha com `last_updated`, `pkg_version`,
+#'   `n_files`, `bytes_total`, contagens por status (`n_downloaded`,
+#'   `n_cached`, `n_failed`, `n_skipped`) e a lista de `run_ids`. Se ainda nao
+#'   houver manifesto, devolve um tibble vazio com essas colunas.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' fbds_manifest_status()
+#' fbds_manifest_status("/dados/fbds")
+#' }
+fbds_manifest_status <- function(dest_dir = fbds_cache_dir()) {
+  json_path <- file.path(dest_dir, "manifest.json")
+  index_path <- file.path(dest_dir, "_manifests", "_index.csv")
+
+  if (file.exists(json_path)) {
+    return(read_manifest_summary_json(json_path))
+  }
+  if (file.exists(index_path)) {
+    return(manifest_summary_from_index(read_manifest_index(index_path)))
+  }
+
+  empty_manifest_status()
 }
 
 #' Agrupar os arquivos de um manifesto em conjuntos de shapefile
