@@ -17,5 +17,6 @@ empacotado em `inst/qgis/`.
 
 ``` r
 fbds_qgis_style_fields()
-#> [1] "CLASSE_USO" "HIDRO"      "MAPBIOMAS"  "NATUREZA"   "RIO"       
+#> [1] "CLASSE_USO"             "HIDRO"                  "MAPBIOMAS"             
+#> [4] "NATUREZA"               "PLANAFLOR-RECOMPOSICAO" "RIO"                   
 ```

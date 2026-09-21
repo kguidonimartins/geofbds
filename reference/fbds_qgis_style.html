@@ -92,11 +92,13 @@ existir.</p></dd>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">dest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"qgis-styles-"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">fbds_qgis_style</span><span class="op">(</span>dest_dir <span class="op">=</span> <span class="va">dest</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Estilo(s) do QGIS copiado(s) para <span style="color: #0000BB;">/tmp/RtmpqTKu8b/qgis-styles-697d6e7a520f</span>:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">"CLASSE_USO.qml"</span>, <span style="color: #0000BB;">"HIDRO.qml"</span>, <span style="color: #0000BB;">"MAPBIOMAS.qml"</span>, <span style="color: #0000BB;">"NATUREZA.qml"</span>, and <span style="color: #0000BB;">"RIO.qml"</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Estilo(s) do QGIS copiado(s) para <span style="color: #0000BB;">/tmp/Rtmp110xEN/qgis-styles-69c428e77a4b</span>:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">"CLASSE_USO.qml"</span>, <span style="color: #0000BB;">"HIDRO.qml"</span>, <span style="color: #0000BB;">"MAPBIOMAS.qml"</span>, <span style="color: #0000BB;">"NATUREZA.qml"</span>,</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">"PLANAFLOR-RECOMPOSICAO.qml"</span>, and <span style="color: #0000BB;">"RIO.qml"</span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="va">dest</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "CLASSE_USO.qml" "HIDRO.qml"      "MAPBIOMAS.qml"  "NATUREZA.qml"  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "RIO.qml"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "CLASSE_USO.qml"             "HIDRO.qml"                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3] "MAPBIOMAS.qml"              "NATUREZA.qml"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "PLANAFLOR-RECOMPOSICAO.qml" "RIO.qml"                   </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">dest</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
