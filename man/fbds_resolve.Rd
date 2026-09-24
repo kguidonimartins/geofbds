@@ -19,8 +19,9 @@ nenhum municipio interrompe a execucao com
 um aviso.}
 }
 \value{
-Vetor de geocodigos (texto, 7 digitos), sem duplicatas, na ordem
-de primeira ocorrencia.
+Vetor nomeado de geocodigos (texto, 7 digitos), com o nome do
+municipio do catalogo em cada elemento, sem duplicatas e na ordem de
+primeira ocorrencia.
 }
 \description{
 Ponto de entrada universal do pacote: aceita geocodigo (numerico ou

@@ -57,8 +57,9 @@ fbds_catalog <- function(uf = NULL, name = NULL, geocode = NULL) {
 #'   `fbds_unknown_municipality`. Se `FALSE`, o identificador e ignorado com
 #'   um aviso.
 #'
-#' @return Vetor de geocodigos (texto, 7 digitos), sem duplicatas, na ordem
-#'   de primeira ocorrencia.
+#' @return Vetor nomeado de geocodigos (texto, 7 digitos), com o nome do
+#'   municipio do catalogo em cada elemento, sem duplicatas e na ordem de
+#'   primeira ocorrencia.
 #' @export
 #'
 #' @examples
@@ -84,7 +85,11 @@ fbds_resolve <- function(x, uf = NULL, strict = TRUE) {
     strict = strict
   )
 
-  unique(unlist(resolved, use.names = FALSE))
+  geocodes <- unique(unlist(resolved, use.names = FALSE))
+  names(geocodes) <- fbds_municipios$municipality[
+    match(geocodes, fbds_municipios$geocode)
+  ]
+  geocodes
 }
 
 resolve_token <- function(token, uf, catalog, strict) {

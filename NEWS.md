@@ -2,6 +2,8 @@
 
 ## Novidades
 
+- `fbds_resolve()` agora retorna os geocódigos nomeados pelos municípios do
+  catálogo, facilitando a conferência da correspondência entre nome e código.
 - Adicionada `fbds_manifest_status()`, que consulta o histórico agregado de
   downloads em `manifest.json` (ou reconstrói o resumo a partir do índice CSV
   legado), e passou a registrar a versão do pacote em cada manifesto (#5).

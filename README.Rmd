@@ -53,7 +53,8 @@ fbds_layers()
 Geocódigo do IBGE, nome de município ou sigla de UF — tudo passa por
 `fbds_resolve()`, o resolvedor universal do pacote. Nome ambíguo (existe em
 mais de uma UF) nunca é escolhido em silêncio: gera erro classificado,
-listando os candidatos.
+listando os candidatos. O retorno associa cada geocódigo ao nome do
+município no catálogo, para facilitar a conferência.
 
 ```{r}
 fbds_resolve("1100031")
