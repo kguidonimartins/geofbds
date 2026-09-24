@@ -103,7 +103,7 @@
 <div class="section level2">
 <h2 id="uso-básico">Uso básico<a class="anchor" aria-label="anchor" href="#uso-b%C3%A1sico"></a>
 </h2>
-<p>Geocódigo do IBGE, nome de município ou sigla de UF — tudo passa por <code><a href="reference/fbds_resolve.html">fbds_resolve()</a></code>, o resolvedor universal do pacote. Nome ambíguo (existe em mais de uma UF) nunca é escolhido em silêncio: gera erro classificado, listando os candidatos.</p>
+<p>Geocódigo do IBGE, nome de município ou sigla de UF — tudo passa por <code><a href="reference/fbds_resolve.html">fbds_resolve()</a></code>, o resolvedor universal do pacote. Nome ambíguo (existe em mais de uma UF) nunca é escolhido em silêncio: gera erro classificado, listando os candidatos. O retorno associa cada geocódigo ao nome do município no catálogo, para facilitar a conferência.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/fbds_resolve.html">fbds_resolve</a></span><span class="op">(</span><span class="st">"1100031"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/fbds_resolve.html">fbds_resolve</a></span><span class="op">(</span><span class="st">"Cabixi"</span><span class="op">)</span></span>
@@ -274,6 +274,7 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/kguidonimartins/geofbds/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/kguidonimartins/geofbds/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://app.codecov.io/gh/kguidonimartins/geofbds" class="external-link"><img src="https://codecov.io/gh/kguidonimartins/geofbds/graph/badge.svg" alt="Codecov test coverage"></a></li>
 </ul>
 </div>
 

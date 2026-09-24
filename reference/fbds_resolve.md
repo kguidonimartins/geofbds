@@ -33,25 +33,57 @@ fbds_resolve(x, uf = NULL, strict = TRUE)
 
 ## Value
 
-Vetor de geocodigos (texto, 7 digitos), sem duplicatas, na ordem de
-primeira ocorrencia.
+Vetor nomeado de geocodigos (texto, 7 digitos), com o nome do municipio
+do catalogo em cada elemento, sem duplicatas e na ordem de primeira
+ocorrencia.
 
 ## Examples
 
 ``` r
 fbds_resolve("1100031")
-#> [1] "1100031"
+#>    CABIXI 
+#> "1100031" 
 fbds_resolve("cabixi")
-#> [1] "1100031"
+#>    CABIXI 
+#> "1100031" 
 fbds_resolve("Cabixi/RO")
-#> [1] "1100031"
+#>    CABIXI 
+#> "1100031" 
 fbds_resolve("RO")
-#>  [1] "1100015" "1100023" "1100031" "1100049" "1100056" "1100064" "1100072"
-#>  [8] "1100080" "1100098" "1100106" "1100114" "1100122" "1100130" "1100148"
-#> [15] "1100155" "1100189" "1100205" "1100254" "1100262" "1100288" "1100296"
-#> [22] "1100304" "1100320" "1100338" "1100346" "1100379" "1100403" "1100452"
-#> [29] "1100502" "1100601" "1100700" "1100809" "1100908" "1100924" "1100940"
-#> [36] "1101005" "1101104" "1101203" "1101302" "1101401" "1101435" "1101450"
-#> [43] "1101468" "1101476" "1101484" "1101492" "1101500" "1101559" "1101609"
-#> [50] "1101708" "1101757" "1101807"
+#>     ALTA FLORESTA D'OESTE                 ARIQUEMES                    CABIXI 
+#>                 "1100015"                 "1100023"                 "1100031" 
+#>                    CACOAL                CEREJEIRAS         COLORADO DO OESTE 
+#>                 "1100049"                 "1100056"                 "1100064" 
+#>                CORUMBIARA             COSTA MARQUES           ESPIGÃO D'OESTE 
+#>                 "1100072"                 "1100080"                 "1100098" 
+#>             GUAJARÁ-MIRIM                      JARU                 JI-PARANÁ 
+#>                 "1100106"                 "1100114"                 "1100122" 
+#>        MACHADINHO D'OESTE  NOVA BRASILÂNDIA D'OESTE       OURO PRETO DO OESTE 
+#>                 "1100130"                 "1100148"                 "1100155" 
+#>             PIMENTA BUENO               PORTO VELHO         PRESIDENTE MÉDICI 
+#>                 "1100189"                 "1100205"                 "1100254" 
+#>                RIO CRESPO            ROLIM DE MOURA       SANTA LUZIA D'OESTE 
+#>                 "1100262"                 "1100288"                 "1100296" 
+#>                   VILHENA     SÃO MIGUEL DO GUAPORÉ               NOVA MAMORÉ 
+#>                 "1100304"                 "1100320"                 "1100338" 
+#>          ALVORADA D'OESTE   ALTO ALEGRE DOS PARECIS              ALTO PARAÍSO 
+#>                 "1100346"                 "1100379"                 "1100403" 
+#>                   BURITIS   NOVO HORIZONTE DO OESTE               CACAULÂNDIA 
+#>                 "1100452"                 "1100502"                 "1100601" 
+#>    CAMPO NOVO DE RONDÔNIA        CANDEIAS DO JAMARI              CASTANHEIRAS 
+#>                 "1100700"                 "1100809"                 "1100908" 
+#>               CHUPINGUAIA                   CUJUBIM GOVERNADOR JORGE TEIXEIRA 
+#>                 "1100924"                 "1100940"                 "1101005" 
+#>           ITAPUÃ DO OESTE        MINISTRO ANDREAZZA          MIRANTE DA SERRA 
+#>                 "1101104"                 "1101203"                 "1101302" 
+#>               MONTE NEGRO                NOVA UNIÃO                   PARECIS 
+#>                 "1101401"                 "1101435"                 "1101450" 
+#>      PIMENTEIRAS DO OESTE     PRIMAVERA DE RONDÔNIA        SÃO FELIPE D'OESTE 
+#>                 "1101468"                 "1101476"                 "1101484" 
+#>  SÃO FRANCISCO DO GUAPORÉ              SERINGUEIRAS             TEIXEIRÓPOLIS 
+#>                 "1101492"                 "1101500"                 "1101559" 
+#>                 THEOBROMA                     URUPÁ             VALE DO ANARI 
+#>                 "1101609"                 "1101708"                 "1101757" 
+#>           VALE DO PARAÍSO 
+#>                 "1101807" 
 ```

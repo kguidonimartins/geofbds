@@ -39,7 +39,8 @@ Geocódigo do IBGE, nome de município ou sigla de UF — tudo passa por
 [`fbds_resolve()`](https://kguidonimartins.github.io/geofbds/reference/fbds_resolve.md),
 o resolvedor universal do pacote. Nome ambíguo (existe em mais de uma
 UF) nunca é escolhido em silêncio: gera erro classificado, listando os
-candidatos.
+candidatos. O retorno associa cada geocódigo ao nome do município no
+catálogo, para facilitar a conferência.
 
 ``` r
 

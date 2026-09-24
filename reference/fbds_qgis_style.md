@@ -44,7 +44,7 @@ Vetor com os caminhos dos arquivos copiados, invisivelmente.
 ``` r
 dest <- tempfile("qgis-styles-")
 fbds_qgis_style(dest_dir = dest)
-#> Estilo(s) do QGIS copiado(s) para /tmp/Rtmpr6J4SM/qgis-styles-68fb116455e2:
+#> Estilo(s) do QGIS copiado(s) para /tmp/RtmpugsNTY/qgis-styles-691f66881627:
 #> "CLASSE_USO.qml", "HIDRO.qml", "MAPBIOMAS.qml", "NATUREZA.qml",
 #> "PLANAFLOR-RECOMPOSICAO.qml", and "RIO.qml"
 list.files(dest)

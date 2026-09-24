@@ -4,6 +4,9 @@
 
 ### Novidades
 
+- [`fbds_resolve()`](https://kguidonimartins.github.io/geofbds/reference/fbds_resolve.md)
+  agora retorna os geocódigos nomeados pelos municípios do catálogo,
+  facilitando a conferência da correspondência entre nome e código.
 - Adicionada
   [`fbds_manifest_status()`](https://kguidonimartins.github.io/geofbds/reference/fbds_manifest_status.md),
   que consulta o histórico agregado de downloads em `manifest.json` (ou
