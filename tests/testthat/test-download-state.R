@@ -271,15 +271,26 @@ test_that("fbds_download_state downloads a whole UF, resuming after a partial fa
   expect_equal(sum(progress1$status == "complete"), 14L)
 
   # round 2 ("resume"): only the previously-incomplete municipality is
-  # processed; the flaky route's 3rd call now succeeds
-  m2 <- fbds_download_state(
-    "RR",
-    layers = "app",
-    dest_dir = dest_dir,
-    block_size = 5L,
-    retries = 1L,
-    progress = FALSE
+  # processed; the flaky route's 3rd call now succeeds. progress = TRUE
+  # here also checks the resume/block/download messages.
+  messages <- character()
+  m2 <- withCallingHandlers(
+    fbds_download_state(
+      "RR",
+      layers = "app",
+      dest_dir = dest_dir,
+      block_size = 5L,
+      retries = 1L,
+      progress = TRUE
+    ),
+    message = function(m) {
+      messages <<- c(messages, conditionMessage(m))
+      invokeRestart("muffleMessage")
+    }
   )
+  expect_true(any(grepl("Retomando: 14 municipio(s)", messages, fixed = TRUE)))
+  expect_true(any(grepl("Bloco 1/1", messages, fixed = TRUE)))
+  expect_true(any(grepl("Baixando", messages, fixed = TRUE)))
   expect_equal(unique(m2$geocode), flaky_geocode)
   expect_equal(m2$status, "downloaded")
 
@@ -317,4 +328,11 @@ test_that("fbds_download_all delegates to fbds_download_state for every UF", {
   )
   expect_true(all(m$uf == "AC"))
   expect_equal(nrow(m), nrow(ac))
+})
+
+test_that("fbds_download_state errors on a UF with no municipalities", {
+  expect_error(
+    fbds_download_state("XX", dest_dir = withr::local_tempdir()),
+    class = "fbds_unknown_municipality"
+  )
 })

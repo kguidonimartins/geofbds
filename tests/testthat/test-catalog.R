@@ -75,3 +75,18 @@ test_that("o catalogo e alcancavel sem anexar o pacote", {
     "tbl_df"
   )
 })
+
+test_that("municipios_data reads the catalog straight from data/", {
+  out <- geofbds:::municipios_data()
+  expect_s3_class(out, "tbl_df")
+  expect_equal(nrow(out), 5470L)
+  expect_identical(out, fbds_municipios)
+})
+
+test_that("format_bytes formats sizes and treats NA/zero as 0 B", {
+  expect_equal(geofbds:::format_bytes(NA), "0 B")
+  expect_equal(geofbds:::format_bytes(0), "0 B")
+  expect_equal(geofbds:::format_bytes(512), "512.0 B")
+  expect_equal(geofbds:::format_bytes(1536), "1.5 KB")
+  expect_equal(geofbds:::format_bytes(3 * 1024^3), "3.0 GB")
+})

@@ -183,18 +183,17 @@ manifest_summary_from_index <- function(index) {
 
 manifest_summary_json <- function(summary) {
   last_updated <- summary$last_updated[[1]]
+  # NA (e nao NULL): com na = "null" vira JSON null; NULL viraria um
+  # objeto vazio `{}`.
   last_updated <- if (is.na(last_updated)) {
-    NULL
+    NA_character_
   } else {
     format(last_updated, "%Y-%m-%dT%H:%M:%OS3Z", tz = "UTC")
   }
 
-  pkg_version <- summary$pkg_version[[1]]
-  pkg_version <- if (is.na(pkg_version)) NULL else pkg_version
-
   list(
     last_updated = last_updated,
-    pkg_version = pkg_version,
+    pkg_version = summary$pkg_version[[1]],
     n_files = summary$n_files[[1]],
     bytes_total = summary$bytes_total[[1]],
     n_downloaded = summary$n_downloaded[[1]],

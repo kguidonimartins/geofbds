@@ -23,6 +23,8 @@ municipios_data <- function() {
   get("fbds_municipios", envir = env)
 }
 
+# nocov start
+# Roda antes de o covr instrumentar a namespace, entao nunca e contado.
 .onLoad <- function(libname, pkgname) {
   # Prende o catalogo a namespace (e nao a search path) para que ele exista
   # em `geofbds::` sem `library()`. Sob demanda: o banco lazy so e lido no
@@ -57,3 +59,4 @@ municipios_data <- function() {
 
   invisible()
 }
+# nocov end

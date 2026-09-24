@@ -59,3 +59,17 @@ test_that("fbds_resolve with strict = FALSE drops unresolved input with a warnin
   )
   expect_equal(out, c(CABIXI = "1100031"))
 })
+
+test_that("fbds_resolve rejects empty input", {
+  expect_error(fbds_resolve(character(0)), class = "fbds_bad_geocode")
+})
+
+test_that("fbds_resolve errors on a well-formed geocode missing from the catalog", {
+  expect_error(fbds_resolve("9999999"), class = "fbds_unknown_municipality")
+})
+
+test_that("fbds_resolve rejects a malformed 'Municipio/UF'", {
+  expect_error(fbds_resolve("Cabixi/RO/BR"), class = "fbds_bad_geocode")
+  expect_error(fbds_resolve("/RO"), class = "fbds_bad_geocode")
+  expect_error(fbds_resolve("Cabixi/ "), class = "fbds_bad_geocode")
+})

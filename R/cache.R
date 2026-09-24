@@ -16,7 +16,7 @@ fbds_cache_dir <- function() {
   }
 
   if (!dir.exists(dir)) {
-    if (interactive()) {
+    if (rlang::is_interactive()) {
       cli::cli_inform("geofbds ainda nao tem um diretorio de cache.")
       proceed <- isTRUE(utils::askYesNo(sprintf(
         "Criar %s para guardar listagens e downloads?",

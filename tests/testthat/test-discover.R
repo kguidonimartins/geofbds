@@ -316,3 +316,43 @@ test_that("fbds_request gives up after exhausting retries", {
     class = "fbds_http_error"
   )
 })
+
+test_that("fbds_files rejects an unknown layer", {
+  expect_error(
+    fbds_files("1100031", layers = "nao_existe"),
+    class = "fbds_bad_layer"
+  )
+})
+
+test_that("fbds_files returns an empty typed tibble when every listing fails", {
+  local_fixtures_server()
+  expect_warning(
+    out <- fbds_files("1100015", layers = "app"), # no mock route -> 404
+    class = "rlang_warning"
+  )
+  expect_equal(nrow(out), 0L)
+  expect_type(out$url, "character")
+  expect_s3_class(out$modified, "POSIXct")
+})
+
+test_that("parse_h5ai_size returns NA for text without a number", {
+  expect_equal(geofbds:::parse_h5ai_size(c("abc", "KB")), c(NA_real_, NA_real_))
+})
+
+test_that("parse_h5ai_listing returns an empty tibble for a directory with only the parent link", {
+  html <- '<div id="fallback"><table><tr><td class="fb-i"><img alt="folder-parent"></td>
+    <td class="fb-n"><a href="..">Parent Directory</a></td>
+    <td class="fb-d"></td><td class="fb-s"></td></tr></table></div>'
+  out <- geofbds:::parse_h5ai_listing(html, "https://geo.fbds.org.br/RO/X/")
+  expect_equal(nrow(out), 0L)
+})
+
+test_that("fbds_request raises fbds_http_error on a network failure", {
+  # nothing listens on the discard port on loopback: connection refused
+  err <- expect_error(
+    geofbds:::fbds_request("http://127.0.0.1:9/", retries = 0L),
+    class = "fbds_http_error"
+  )
+  expect_true(is.na(err$status_code))
+  expect_match(conditionMessage(err), "Falha de rede")
+})

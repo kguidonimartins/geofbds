@@ -325,3 +325,53 @@ test_that("fbds_read decodes UTF-8 attributes and drops duplicate metadata", {
   )
   expect_identical(anyDuplicated(tolower(names(out))), 0L)
 })
+
+test_that("fbds_read rejects more than one layer", {
+  root <- withr::local_tempdir()
+  expect_error(
+    fbds_read(root, layer = c("app", "uso")),
+    class = "fbds_bad_layer"
+  )
+})
+
+test_that("fbds_read errors when every shapefile set is incomplete", {
+  root <- withr::local_tempdir()
+  broken <- make_test_shp(
+    file.path(root, "RO", "1100031", "app"),
+    "RO",
+    "1100031",
+    "APP"
+  )
+  file.remove(sub("\\.shp$", ".dbf", broken))
+
+  expect_error(
+    suppressWarnings(fbds_read(root, layer = "app", type = "APP")),
+    class = "fbds_incomplete_shapefile"
+  )
+})
+
+test_that("fbds_read ignores layer directories without a .shp", {
+  root <- withr::local_tempdir()
+  make_test_shp(file.path(root, "RO", "1100031", "app"), "RO", "1100031", "APP")
+  empty_dir <- file.path(root, "RO", "1100049", "app")
+  dir.create(empty_dir, recursive = TRUE)
+  writeLines("x", file.path(empty_dir, "leiame.txt"))
+
+  out <- fbds_read(root, layer = "app", type = "APP")
+  expect_equal(unique(out$geocode), "1100031")
+})
+
+test_that("fbds_read errors on a manifest with no shapefile for the layer", {
+  manifest <- tibble::tibble(
+    run_id = "r1",
+    geocode = "1100031",
+    uf = "RO",
+    municipality = "CABIXI",
+    layer = "app",
+    file = "RO_1100031_APP.shp",
+    path = "nao/existe/RO_1100031_APP.shp",
+    status = "failed",
+    timestamp = Sys.time()
+  )
+  expect_error(fbds_read(manifest, layer = "app"), class = "fbds_empty_plan")
+})
