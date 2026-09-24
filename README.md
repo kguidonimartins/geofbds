@@ -4,6 +4,8 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/kguidonimartins/geofbds/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kguidonimartins/geofbds/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/kguidonimartins/geofbds/graph/badge.svg)](https://app.codecov.io/gh/kguidonimartins/geofbds)
 <!-- badges: end -->
 
 O geofbds descobre, baixa e lê os dados geoespaciais municipais

@@ -12,3 +12,5 @@ README.html
 !.env.example
 docs/
 out-*.txt
+coverage-report.html
+coverage-report/

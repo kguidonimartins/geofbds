@@ -6,7 +6,7 @@ R := Rscript -e
 PKGNAME := $(shell sed -n "s/Package: *\([^ ]*\)/\1/p" DESCRIPTION)
 PKGVERS := $(shell sed -n "s/Version: *\([^ ]*\)/\1/p" DESCRIPTION)
 
-.PHONY: help tests clean check-cran spell url-check cran-build submit-cran cran-release catalog qml run-app deploy
+.PHONY: help tests coverage coverage-report clean check-cran spell url-check cran-build submit-cran cran-release catalog qml run-app deploy
 
 all: install tests check clean ## run install_deps, build, install, tests, check, and clean
 
@@ -57,6 +57,12 @@ styler: ## styler package
 
 tests: ## run test
 	$(R) "Sys.setenv('TESTTHAT_MAX_FAILS' = Inf); devtools::test()" 2>&1 | tee out-testthat.txt
+
+coverage: ## test coverage by file (covr); grave em out-coverage.txt
+	$(R) "cov <- covr::package_coverage(); print(cov, group = 'filename')" 2>&1 | tee out-coverage.txt
+
+coverage-report: ## interactive line-by-line coverage report (covr + DT)
+	$(R) "covr::report(covr::package_coverage(), file = 'coverage-report.html', browse = interactive())"
 
 install_deps: ## install dependencies
 	$(R) 'if (!requireNamespace("remotes")) install.packages("remotes")' \
